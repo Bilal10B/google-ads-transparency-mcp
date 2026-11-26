@@ -8,11 +8,15 @@ In the EU and EEA you also get a unique bonus: the **official impression range p
 
 This repository documents the public [Apify Actor](https://apify.com/xsi/google-ads-transparency) and its MCP server. It does not contain the Actor's source code.
 
-**$0.001 per ad** (no start fee). **$0.002** for an ad with full EU details. A free Apify account includes **$5 of monthly credit**.
+**$1 per 1,000 ads** ($0.001 per ad, no start fee). **$0.002** for an ad with full EU details. A free Apify account includes **$5 of monthly credit**.
 
 - Store: [apify.com/xsi/google-ads-transparency](https://apify.com/xsi/google-ads-transparency)
 - MCP endpoint (Streamable HTTP): `https://xsi--google-ads-transparency.apify.actor/mcp`
 - Demo: [How to track any competitor's Google Ads (and get EU impression data) with an API / MCP](docs/how-to-track-any-competitor-google-ads-api-mcp.md) ([version française](docs/comment-suivre-les-google-ads-dun-concurrent-api-mcp.md))
+
+![Sample output: Nike and HubSpot ads in the United States](docs/sample-output.png)
+
+*Real run of 26 Nov 2026: `nike.com` + `hubspot.com`, United States, with ad copy (OCR on).*
 
 ## Who it is for
 
@@ -23,7 +27,7 @@ This repository documents the public [Apify Actor](https://apify.com/xsi/google-
 ## Why this one
 
 - **Worldwide coverage** from the official Transparency Center: any country Google supports, including the US, UK, Germany, France and dozens more.
-- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad.
+- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad. Text ads that Google keeps only as an image are read with free local OCR and flagged `textFromImage: true`.
 - **EU bonus:** official DSA impression ranges by country and platform, plus targeting criteria (demographics, locations, contextual signals, customer lists, topics of interest).
 - **New-ad alerts** you can schedule daily or weekly.
 - **MCP server** with four tools, so agents can ask “what is Nike running in the US this week?” without a custom integration.
@@ -197,3 +201,8 @@ This tool only reads **public** data from Google's Ads Transparency Center. It d
 ## License
 
 The documentation and examples in this repository are under the [MIT License](LICENSE). The hosted Actor is a paid service on the Apify Store; using it is subject to [Apify's terms](https://apify.com/terms) and [Google's Ads Transparency Center terms](https://adstransparency.google.com/).
+
+
+## Free workflows (n8n, Make, Clay)
+
+Weekly watch of your 5 competitors' new winning Google ads → Slack or Notion: see [`workflows/`](workflows/README.md). Two ready-to-import n8n files, plus Make and Clay guides.

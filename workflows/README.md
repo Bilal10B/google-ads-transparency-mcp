@@ -2,7 +2,7 @@
 
 Every Monday, get the Google ads that **became "winning" this week** (still running after 30+ days: advertisers keep ads that work) and the **ads launched in the last 7 days**, for 5 competitors, in Slack or Notion. Data: Google's official Ads Transparency Center, via the Apify Actor [xsi/google-ads-transparency](https://apify.com/xsi/google-ads-transparency).
 
-Cost: 5 competitors × 50 ads ≈ $0.25 per week ($1 per 1,000 ads, ad copy included; +$0.001 per ad text read by OCR). The Apify free plan gives $5 of credit every month. Websites with no ads cost nothing and are listed at the bottom of the report.
+Cost: 5 competitors × 50 ads ≈ $0.25 per week ($1 per 1,000 ads, ad copy included; OCR is off in this workflow and by default, so no OCR charge). The Apify free plan gives $5 of credit every month. Websites with no ads cost nothing and are listed at the bottom of the report.
 
 > Actor v2.1 (26 Nov 2026) adds one free `domain_summary` row per website. All workflows here ignore it in the "No ads" line (updated files of 26 Nov 2026). If you imported an older copy, re-import it or add `&& row.status !== 'domain_summary'` to the filter of the report Code node.
 

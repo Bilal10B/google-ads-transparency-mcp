@@ -145,7 +145,7 @@ On ne paie que les résultats. Le calcul et le proxy sont inclus. Pas de frais d
 |---|---|
 | Pub (texte inclus) | 0,001 $ (0,0007 $ en GOLD) |
 | Pub avec détails UE (remplace le prix « pub ») | 0,0015 $ (0,001 $ en GOLD) |
-| Texte lu par OCR, seulement s’il est trouvé | 0,001 $ |
+| Texte lu par OCR (option, désactivée par défaut), seulement s’il est trouvé | 0,001 $ |
 | Alerte nouvelle pub (mode monitor) | 0,005 $ |
 | Appel d’outil MCP | 0,003 $, plus les événements ci-dessus |
 

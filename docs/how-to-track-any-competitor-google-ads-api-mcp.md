@@ -145,7 +145,7 @@ You only pay for results. Compute and proxy are included. No start fee.
 |---|---|
 | Ad (ad copy included) | $0.001 ($0.0007 on GOLD) |
 | Ad with EU details (replaces the ad price) | $0.0015 ($0.001 on GOLD) |
-| Ad copy read by OCR, only when text is found | $0.001 |
+| Ad copy read by OCR (opt-in, off by default), only when text is found | $0.001 |
 | New-ad alert (monitor mode) | $0.005 |
 | MCP tool call | $0.003, plus the events above |
 

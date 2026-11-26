@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Bilal10B/google-ads-transparency",
   "title": "Google Ads Transparency — API & MCP",
-  "description": "Any competitor's Google ads worldwide via API or MCP: ad copy, YouTube ads, EU impressions, $1/1K.",
-  "version": "1.1.0",
+  "description": "Competitors' Google ads via API or MCP: ad copy, winning, new & stopped ads, promo codes. $1/1K.",
+  "version": "2.1.0",
   "websiteUrl": "https://apify.com/xsi/google-ads-transparency",
   "repository": {
     "url": "https://github.com/Bilal10B/google-ads-transparency-mcp",

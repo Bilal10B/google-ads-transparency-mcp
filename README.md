@@ -1,5 +1,7 @@
 # Google Ads Transparency MCP & API
 
+[![Glama MCP server](https://glama.ai/mcp/servers/Bilal10B/google-ads-transparency-mcp/badge)](https://glama.ai/mcp/servers/Bilal10B/google-ads-transparency-mcp) [![Google Ads Transparency MCP connector](https://glama.ai/mcp/connectors/io.github.Bilal10B/google-ads-transparency/badges/score.svg)](https://glama.ai/mcp/connectors/io.github.Bilal10B/google-ads-transparency)
+
 Track **any competitor's Google ads worldwide** — on Search, YouTube, Shopping, Maps and Google Play — from Google's official [Ads Transparency Center](https://adstransparency.google.com/), as clean JSON.
 
 Use it as a regular Apify API (Python, JavaScript, cURL) or as an **MCP server** that AI agents (Claude, ChatGPT, Cursor, n8n, LangChain) can call directly.
@@ -8,7 +10,7 @@ In the EU and EEA you also get a unique bonus: the **official impression range p
 
 This repository documents the public [Apify Actor](https://apify.com/xsi/google-ads-transparency) and its MCP server. It does not contain the Actor's source code.
 
-**$1 per 1,000 ads** ($0.001 per ad, no start fee). **$0.002** for an ad with full EU details. A free Apify account includes **$5 of monthly credit**.
+**$1 per 1,000 ads** ($0.001 per ad, ad copy included, no start fee; $0.70 per 1,000 on Apify GOLD plans). **$0.0015** for an ad with full EU details. A free Apify account includes **$5 of monthly credit**.
 
 - Store: [apify.com/xsi/google-ads-transparency](https://apify.com/xsi/google-ads-transparency)
 - MCP endpoint (Streamable HTTP): `https://xsi--google-ads-transparency.apify.actor/mcp`
@@ -27,9 +29,10 @@ This repository documents the public [Apify Actor](https://apify.com/xsi/google-
 ## Why this one
 
 - **Worldwide coverage** from the official Transparency Center: any country Google supports, including the US, UK, Germany, France and dozens more.
-- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad. Text ads that Google keeps only as an image are read with free local OCR and flagged `textFromImage: true`.
+- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad. Text ads that Google keeps only as an image are read with local OCR (+$0.001 only when text is found) and flagged `textFromImage: true`.
 - **EU bonus:** official DSA impression ranges by country and platform, plus targeting criteria (demographics, locations, contextual signals, customer lists, topics of interest).
-- **New-ad alerts** you can schedule daily or weekly.
+- **Ready-made signals on every ad (v2.1):** `daysActive`, `isWinningAd`, `isNewLaunch`, `detectedPromoCodes`, `detectedDiscounts`, plus one free `domain_summary` row per website (active, winning and new ads, format split, oldest ad, promo codes).
+- **New-ad and stopped-ad alerts** you can schedule daily or weekly (stopped-ad rows are free).
 - **MCP server** with four tools, so agents can ask “what is Nike running in the US this week?” without a custom integration.
 - **$0.001 per ad** among the most-used Transparency Center Actors on the Apify Store as of 26 November 2026, with no start fee. Empty or failed results are not billed, and a run never exceeds your cost cap.
 
@@ -130,14 +133,16 @@ Paste that into Cursor (`~/.cursor/mcp.json`), Claude Desktop (`claude_desktop_c
 
 | Tool | What it does | Billing |
 |---|---|---|
-| `find_advertiser` | Company name or website → advertiser IDs (`AR…`), legal name, country, ad-count range | $0.005 per call with results; no match is free |
-| `list_ads` | Ads of a domain, advertiser ID or name, filtered by country, format, platform and dates | $0.005 + $0.001 per ad; empty results are free |
-| `get_ad_details` | One ad: variants, countries, and — in the EU — impressions and audience selection | $0.005 + $0.002 (+$0.001 when copy is found) |
-| `new_ads_since` | Ads first shown on or after a date — for a daily or weekly watch | $0.005 + $0.001 per new ad; “nothing new” is free |
+| `find_advertiser` | Company name or website → advertiser IDs (`AR…`), legal name, country, ad-count range | $0.003 per call with results; no match is free |
+| `list_ads` | Ads of a domain, advertiser ID or name, filtered by country, format, platform and dates. Returns a `summary` plus token-lean rows (`verbose: true` for every key); OCR only with `includeOcr: true` | $0.003 + $0.001 per ad (+$0.001 per OCR text); empty results are free |
+| `get_ad_details` | One ad: variants, countries, and — in the EU — impressions and audience selection | $0.003 + $0.0015 |
+| `new_ads_since` | Ads first shown on or after a date — for a daily or weekly watch | $0.003 + $0.001 per new ad; “nothing new” is free |
+
+Measured on 26 Nov 2026 (build 2.1.8): five timed `list_ads` calls answered in 3.3–8.6 s (nike.com US 3.3 s, hubspot.com 4.8 s, semrush.com 5.2 s, adidas.com 8.4 s, nike.com GB 8.6 s), plus 0.6–2.1 s for `initialize`. Text answers were 54% smaller than in v2.0.
 
 ## Example output
 
-Real data from run [`biPCUmNEKOhNQP5oO`](https://console.apify.com/view/runs/biPCUmNEKOhNQP5oO) on 26 November 2026 at 10:48 (Europe/Brussels, 09:48 UTC). The query compared `nike.com` and `adidas.com` in the United States, United Kingdom, Germany and France, with details and ad copy, capped at 2 ads per brand and country (16 ads). The run took 46.8 seconds and billed 16 “ad-detail” events plus 13 “ad-copy” events ($0.045 at list prices).
+Real data from run [`biPCUmNEKOhNQP5oO`](https://console.apify.com/view/runs/biPCUmNEKOhNQP5oO) on 26 November 2026 at 10:48 (Europe/Brussels, 09:48 UTC). The query compared `nike.com` and `adidas.com` in the United States, United Kingdom, Germany and France, with details and ad copy, capped at 2 ads per brand and country (16 ads). The run took 46.8 seconds and billed 16 “ad-detail” events plus 13 “ad-copy” events ($0.045 at the list prices of that day; ad copy is now included in the ad price).
 
 Google's own totals for these **global domains** (a brand may also advertise under a country domain, which is a separate query):
 
@@ -172,25 +177,25 @@ More of this run, trimmed, is in [`examples/sample-output.json`](examples/sample
 
 You only pay for results. Apify compute and proxy are included in these prices. There is no start fee.
 
-| Event | Price |
-|---|---|
-| Ad | $0.001 |
-| Ad with EU DSA details (replaces the ad price) | $0.002 |
-| Ad copy add-on (only when copy or a YouTube ID is found) | $0.001 |
-| Media file saved (image or video thumbnail) | $0.002 |
-| Advertiser record | $0.002 |
-| Monitored target checked | $0.001 |
-| New-ad alert (includes EU details and copy) | $0.01 |
-| MCP tool call | $0.005, plus the events above for the results |
+| Event | FREE plan | BRONZE | SILVER | GOLD+ |
+|---|---|---|---|---|
+| **Ad** (ad copy included) | $0.001 | $0.0009 | $0.0008 | $0.0007 |
+| Ad with EU DSA details (replaces Ad) | $0.0015 | $0.0013 | $0.0012 | $0.001 |
+| OCR ad copy (image-only text ads, only when text is found) | $0.001 | $0.001 | $0.001 | $0.001 |
+| Media file saved | $0.002 | | | |
+| Advertiser record (advertiser mode) | $0.002 | | | |
+| Monitored target checked (monitor mode) | $0.001 | | | |
+| New-ad alert (monitor mode, details + copy included) | $0.005 | | | |
+| MCP tool call (plus the ads it returns) | $0.003 | | | |
 
-A run never returns or bills more than *Max ads per query*, *Max items*, or *Max cost per run*. Empty results, duplicates and failed requests are not billed.
+Prices as listed on 26 Nov 2026; the [Store page](https://apify.com/xsi/google-ads-transparency) is the reference. Never billed: empty results, status rows, summary rows, stopped-ad rows, duplicates, failed runs, invalid input. The "$0.01 minimum" shown in Apify Console is only the lowest *Max cost per run* you can set, not a fee: a run on a website without ads charged 0 events (run `h4dbATcj0vjr0bviz`).
 
 ## Modes
 
 - `search` — list ads for a website, advertiser name or advertiser ID (`AR…`). Turn on *Include EU DSA details* and *Include ad copy* as needed.
 - `advertiser` — find advertiser IDs and ad-count ranges per country. With a website it also answers “does this site run Google ads?” (`runsAds`).
 - `details` — full data for official Transparency Center URLs you paste.
-- `monitor` — schedule it daily or weekly; you get one alert per **new** ad. The first run only stores a baseline.
+- `monitor` — schedule it daily or weekly; you get one alert per **new** ad and a free `STOPPED_AD` row when an ad stops. The first run only stores a baseline.
 
 Queries can be domains (`nike.com`), names in any script, advertiser IDs, or URLs copied from the Ads Transparency Center.
 
@@ -205,4 +210,4 @@ The documentation and examples in this repository are under the [MIT License](LI
 
 ## Free workflows (n8n, Make, Clay)
 
-Weekly watch of your 5 competitors' new winning Google ads → Slack or Notion: see [`workflows/`](workflows/README.md). Two ready-to-import n8n files, plus Make and Clay guides.
+Weekly watch of your competitors' Google ads → Slack or Notion: see [`workflows/`](workflows/README.md). Ready-to-import n8n files (weekly winning-ads digest for Slack; **Radar**: winning, new and stopped ads to Slack and Notion), plus Make and Clay guides.

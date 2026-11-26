@@ -1,0 +1,18 @@
+Captured at: 2026-11-26T14:27:45.821891+01:00 (Europe/Brussels)
+Source: isolated local n8n 2.49.7 end-to-end test. The gallery workflow's Slack node was replaced, in a test copy only, by an HTTP Request POST to a local capture server at http://127.0.0.1:8765/slack-capture. The payload is the same JSON the Slack node would send as the message text: {"text": <report>}. The gallery JSON itself was not executed against Slack (no n8n Slack bot token is available; Bilal's Slack connector posts as him and is not usable inside n8n).
+
+======= Slack message text =======
+*Competitor Google Ads — weekly report* (20 ads checked, 8 winning ads running 30+ days)
+*New winning ads this week* (crossed 30 days, still running): 0
+*New ads launched in the last 7 days*: 5
+• *nike.com* · TEXT · "Browse Fresh Nike® Styles" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR17572883198667390977?region=US|view>
+• *nike.com* · TEXT · "Nike® Black Friday Savings" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR13401424043815469057?region=US|view>
+• *nike.com* · TEXT · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR09755397306621886465?region=US|view>
+• *nike.com* · TEXT · "Nike® Black Friday Savings" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR08565543206438043649?region=US|view>
+• *nike.com* · TEXT · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR14101030098429804545?region=US|view>
+_No ads / not checked: nonexistent-shop-xyz-48213.com (no_ads_found)_
+
+======= Payload JSON =======
+{
+  "text": "*Competitor Google Ads — weekly report* (20 ads checked, 8 winning ads running 30+ days)\n*New winning ads this week* (crossed 30 days, still running): 0\n*New ads launched in the last 7 days*: 5\n• *nike.com* · TEXT · \"Browse Fresh Nike® Styles\" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR17572883198667390977?region=US|view>\n• *nike.com* · TEXT · \"Nike® Black Friday Savings\" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR13401424043815469057?region=US|view>\n• *nike.com* · TEXT · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR09755397306621886465?region=US|view>\n• *nike.com* · TEXT · \"Nike® Black Friday Savings\" · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR08565543206438043649?region=US|view>\n• *nike.com* · TEXT · 5 days · <https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR14101030098429804545?region=US|view>\n_No ads / not checked: nonexistent-shop-xyz-48213.com (no_ads_found)_"
+}

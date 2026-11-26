@@ -1,0 +1,19 @@
+Test once success 0 ms 1
+Configure radar success 2 ms 1
+Get current ads success 7826 ms 7
+Check new and stopped ads success 4674 ms 1
+Build radar report success 43 ms 1
+*Competitor Google Ads Radar* · 5 ads checked on 1 websites
+• *spyfu.com*: 5/5 running, 5 winning, 0 new · formats T3/I0/V2 · oldest 1859 days · Google reports 62–62 ads
+*Winning ads* (running 30+ days): 5
+• *spyfu.com* · TEXT · "SpyFu - Competitor Keyword Research Tools for Google Ads PPC" · 1859 days · <https://adstransparency.google.com/advertiser/AR06998144876592234497/creative/CR15855317968746446849?region=US|view>
+• *spyfu.com* · TEXT · "Google Ads Competitor Research: Your Secret Weapon for PPC Ads" · 1324 days · <https://adstransparency.google.com/advertiser/AR06998144876592234497/creative/CR09520651496782299137?region=US|view>
+• *spyfu.com* · VIDEO · 262 days · <https://adstransparency.google.com/advertiser/AR06998144876592234497/creative/CR12404397860504731649?region=US|view>
+• *spyfu.com* · VIDEO · 247 days · <https://adstransparency.google.com/advertiser/AR06998144876592234497/creative/CR05172878548540588033?region=US|view>
+• *spyfu.com* · TEXT · "Free SEO & PPC Analysis" · 185 days · <https://adstransparency.google.com/advertiser/AR06998144876592234497/creative/CR10330761192997388289?region=US|view>
+*New launches* (first shown in the last 7 days): 0
+*New ads since last check*: 0
+*Stopped ads since last check*: 0
+_No new or stopped ads since the last check. (The very first run only stores a baseline.)_
+_No ads / not checked: nonexistent-shop-xyz-48213.com (no_ads_found)_
+{'slackChannel': '#competitor-ads', 'notionParentPageId': 'PASTE_NOTION_PAGE_ID', 'title': 'Google Ads Radar 2026-11-26', 'adsChecked': 5, 'winners': 5, 'launches': 0, 'newAds': 0, 'stopped': 0, 'promos': []}

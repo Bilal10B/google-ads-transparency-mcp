@@ -1,0 +1,13 @@
+Captured at: 2026-11-26T14:29:44.987935+01:00 (Europe/Brussels)
+Failure-path test (invalid Apify token). Not the visual-check message.
+
+======= Slack message text =======
+*Competitor Google Ads — weekly report* (0 ads checked, 0 winning ads running 30+ days)
+*New winning ads this week* (crossed 30 days, still running): 0
+*New ads launched in the last 7 days*: 0
+_No ads / not checked: apify (request_failed — User was not found or authentication token is not valid)_
+
+======= Payload JSON =======
+{
+  "text": "*Competitor Google Ads — weekly report* (0 ads checked, 0 winning ads running 30+ days)\n*New winning ads this week* (crossed 30 days, still running): 0\n*New ads launched in the last 7 days*: 0\n_No ads / not checked: apify (request_failed — User was not found or authentication token is not valid)_"
+}

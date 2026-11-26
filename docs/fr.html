@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comment suivre les Google Ads de n’importe quel concurrent (et obtenir les impressions UE) avec une API / MCP</title>
+<meta name="description" content="Track any competitor's Google ads worldwide with an API or MCP server, plus official EU impression data.">
+<link rel="icon" href="logo.png" type="image/png">
+<style>
+:root { --bg:#f6f4ef; --card:#fff; --ink:#1b1b18; --muted:#5c5a54; --line:#e4e0d6; --accent:#0b5fff; }
+* { box-sizing:border-box; }
+html,body { margin:0; background:var(--bg); color:var(--ink);
+  font:18px/1.6 "Source Serif 4", "Iowan Old Style", Georgia, serif; }
+header, main, footer { max-width:760px; margin:0 auto; padding:0 24px; }
+header { padding-top:36px; padding-bottom:8px; }
+header img { width:64px; height:64px; border-radius:16px; display:block; margin-bottom:16px; }
+header .brand { font-family:ui-sans-serif,system-ui,sans-serif; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+h1 { font-size:2rem; line-height:1.2; margin:.3em 0 .6em; }
+h2 { font-size:1.35rem; margin-top:2em; }
+h3 { font-size:1.1rem; }
+a { color:var(--accent); }
+p,li { color:var(--ink); }
+.muted, footer { color:var(--muted); font-size:.95rem; }
+nav a { margin-right:1rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:14px; }
+table { border-collapse:collapse; width:100%; font-size:15px; margin:1.2em 0; background:var(--card); }
+th,td { border:1px solid var(--line); padding:.5em .7em; text-align:left; vertical-align:top; }
+th { background:#f0eee8; }
+pre { background:#1b1b18; color:#f6f4ef; padding:16px; overflow:auto; border-radius:10px; font-size:14px; line-height:1.45; }
+code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em; }
+p code, li code, td code { background:#efece4; padding:.1em .35em; border-radius:4px; }
+pre code { background:none; padding:0; color:inherit; }
+blockquote { margin:1em 0; padding-left:1em; border-left:3px solid var(--line); color:var(--muted); }
+hr { border:0; border-top:1px solid var(--line); margin:2.5em 0; }
+footer { padding:40px 24px 64px; }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Google Ads Transparency logo" width="64" height="64">
+  <div class="brand">Google Ads Transparency — API &amp; MCP</div>
+  <nav>
+    <a href="index.html">English</a>
+    <a href="https://apify.com/xsi/google-ads-transparency">Apify Store</a>
+    <a href="https://github.com/Bilal10B/google-ads-transparency-mcp#google-ads-transparency-mcp--api">README</a>
+  </nav>
+</header>
+<main>
+<h1>Comment suivre les Google Ads de n’importe quel concurrent (et obtenir les impressions UE) avec une API / MCP</h1>
+<p>Pas besoin d’entrer dans le compte Google Ads d’un rival pour voir ce qu’il diffuse. Google publie déjà une bibliothèque publique — le <a href="https://adstransparency.google.com/">Ads Transparency Center</a> — qui couvre Search, YouTube, Shopping, Maps et Google Play, dans tous les pays pris en charge.</p>
+<p>Cet article montre comment extraire ces données via une API, ou laisser un agent IA le faire en MCP, avec l’<a href="https://apify.com/xsi/google-ads-transparency">Actor Google Ads Transparency</a> publié sur Apify. Le fil rouge est un <strong>vrai run</strong> du 26 novembre 2026, qui compare <strong>Nike et Adidas</strong> aux <strong>États-Unis, au Royaume-Uni, en Allemagne et en France</strong>. Les fourchettes d’impressions de l’UE n’apparaissent qu’ensuite, comme un bonus disponible dans l’UE et l’EEE, pas aux États-Unis ni au Royaume-Uni.</p>
+<p>Le public visé : marketeurs, agences, équipes e-commerce, et ceux qui construisent des outils d’ad intelligence ou des agents IA.</p>
+<h2>Ce que j’ai réellement lancé</h2>
+<p>Le 26 novembre 2026 à 10 h 48 (heure de Bruxelles, 09 h 48 UTC), j’ai lancé le run Apify <a href="https://console.apify.com/view/runs/biPCUmNEKOhNQP5oO"><code>biPCUmNEKOhNQP5oO</code></a> avec cette entrée :</p>
+<pre><code>{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;queries&quot;: [&quot;nike.com&quot;, &quot;adidas.com&quot;],
+  &quot;regions&quot;: [&quot;US&quot;, &quot;GB&quot;, &quot;DE&quot;, &quot;FR&quot;],
+  &quot;includeDetails&quot;: true,
+  &quot;includeAdText&quot;: true,
+  &quot;maxAdsPerQuery&quot;: 2,
+  &quot;maxItems&quot;: 16
+}</code></pre>
+<p>Cela fait deux pubs par marque et par pays — 16 pubs, pas un export complet. L’objectif était de mesurer les volumes, puis de lire un petit échantillon réel de créas et de textes.</p>
+<p>Le run s’est terminé en <strong>46,8 secondes</strong>. Il a facturé 16 événements « ad-detail » et 13 événements « ad-copy », soit <strong>0,045 $</strong> aux tarifs de l’Actor. Il n’y a pas de frais de lancement. J’avais aussi plafonné le run à 0,08 $. Apify a enregistré 0,0021 $ d’usage plateforme (calcul et proxy) ; pour un client payant, ces frais sont inclus dans les prix des événements.</p>
+<p>Google a refusé quelques requêtes en cours de route (2 limitations de débit et 1 page CAPTCHA sur 39 requêtes HTTP, soit 5,1 % de refus). L’Actor a réessayé et changé de session proxy. Il ne résout pas les pages CAPTCHA. Les 16 éléments sont revenus, sans erreur.</p>
+<p>Un compte Apify gratuit inclut 5 $ de crédit par mois, largement assez pour répéter ce type de contrôle.</p>
+<h2>D’abord, les volumes</h2>
+<p>Avant même de lire une accroche, Google indique combien de pubs il détient pour chaque domaine dans chaque pays. Ces chiffres sont les fourchettes officielles de Google pour les <strong>domaines mondiaux</strong> <code>nike.com</code> et <code>adidas.com</code>. Une marque peut aussi publier sous un site local (par exemple <code>adidas.co.uk</code>) : ce serait une autre requête, que je n’ai pas lancée ici.</p>
+<table><thead><tr><th>Domaine</th><th>États-Unis</th><th>Royaume-Uni</th><th>Allemagne</th><th>France</th></tr></thead><tbody><tr><td>nike.com</td><td>8 000–9 000 pubs</td><td>2 000–3 000</td><td>9 000–10 000</td><td>8 000–9 000</td></tr><tr><td>adidas.com</td><td>4 000–5 000 pubs</td><td>68</td><td>600–700</td><td>600–700</td></tr></tbody></table>
+<p>Dans cet instantané, le domaine mondial de Nike avait une présence bien plus large que celui d’Adidas dans chacun des marchés interrogés. L’écart est particulièrement net au Royaume-Uni (des milliers de pubs Nike contre 68 pubs Adidas sur <code>adidas.com</code>). Ce n’est pas une mesure de dépense publicitaire, ni un classement de la qualité des créas. C’est le décompte officiel des pubs que Google a en fichier pour ces domaines.</p>
+<p>Les entités juridiques de l’échantillon étaient stables : <strong>Nike, Inc.</strong> aux États-Unis, <strong>Nike Retail BV</strong> au Royaume-Uni, en Allemagne et en France, et <strong>Adidas America, Inc.</strong> dans les quatre pays.</p>
+<h2>Ce que disaient les pubs le 26 novembre 2026</h2>
+<p>Les 16 pubs renvoyées sont un échantillon de deux par case, pas « les meilleures pubs ». Le texte est pourtant déjà utile.</p>
+<p><strong>Nike était sur un temps Black Friday.</strong> Une pub texte américaine, d’abord vue le 22 novembre 2026 (05 h 02 UTC) et encore diffusée le 26 novembre, promouvait la collection Nike Golf : « Save big this Black Friday using code BFRIDAY for an extra 25% off select styles. » Page officielle : <a href="https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR09898538327395532801?region=US">créa US CR09898538327395532801</a>.</p>
+<p>Une pub texte britannique de Nike Retail BV utilisait une accroche plus large : « Nike Black Friday Days Are On » / « Up To 40% Off Selected Styles. Ends On December 1st. » Google a enregistré cette créa pour la première fois le 19 septembre 2025, et elle était encore diffusée le 26 novembre 2026. Page officielle : <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR00669994402592063489?region=GB">créa GB CR00669994402592063489</a>.</p>
+<p>En France, une pub texte présentait <strong>NikeSKIMS</strong> (« Introducing An Updated Take On Pilates Wear From NikeSKIMS. »), d’abord vue le 20 février 2026. Page officielle : <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR13374024866886320129?region=FR">créa FR CR13374024866886320129</a>.</p>
+<p><strong>L’échantillon Adidas était plus « evergreen ».</strong> Aux États-Unis, l’une des deux pubs était une vidéo YouTube (<code>WVLa-eUBGjE</code>, d’abord vue le 11 novembre 2026). Page officielle : <a href="https://adstransparency.google.com/advertiser/AR14017378248766259201/creative/CR03714073080885149697?region=US">créa US CR03714073080885149697</a>. L’autre pub US, aussi diffusée en Allemagne et en France sous le même identifiant, vendait la Terrex Freehiker 3 : « Not a hiker? You Are Now. » Page officielle : <a href="https://adstransparency.google.com/advertiser/AR14017378248766259201/creative/CR02127259033550192641?region=US">créa US CR02127259033550192641</a>.</p>
+<p>Au Royaume-Uni, les textes Adidas incluaient « Shop The adidas Official Site Today. Free Shipping For Members On All Orders. » et « Shop The Three Stripes. » En Allemagne et en France, l’échantillon comprenait aussi des chaussettes, des vêtements et chaussures enfants, et la même pub Freehiker.</p>
+<p>Deux leçons concrètes, même sur 16 pubs :</p>
+<ol>
+<li>1. <strong>La même créa peut apparaître dans plusieurs pays.</strong> La pub Freehiker est ressortie aux États-Unis, en Allemagne et en France. On déduplique avec <code>creativeId</code>.</li>
+<li>2. <strong>La langue du texte n’est pas toujours celle du pays demandé.</strong> Une pub Nike échantillonnée en Allemagne avait un texte en polonais (« Oficjalna strona Nike » / Black Friday jusqu’à −40 % jusqu’au 1er décembre). Elle était aussi diffusée en Pologne, entre autres. Page officielle : <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR07648843056275259393?region=DE">créa DE CR07648843056275259393</a>.</li>
+</ol>
+<h2>Le bonus UE : les fourchettes d’impressions officielles</h2>
+<p>Google <strong>ne publie pas</strong> de nombre d’impressions pour les États-Unis ni pour le Royaume-Uni. Si vous travaillez surtout sur ces marchés, vous obtenez quand même le nom de l’annonceur, le format, les dates de première et dernière diffusion, les pays, le texte et l’URL officielle de la pub.</p>
+<p>Dans l’UE et l’EEE, le Digital Services Act impose un dépôt public plus détaillé. Pour ces pays, l’Actor ajoute, lorsque Google les a publiées :</p>
+<ul>
+<li>une <strong>fourchette d’impressions</strong> officielle pour le pays demandé</li>
+<li>une <strong>répartition par plateforme</strong> (Search, YouTube, Shopping, Maps, Play)</li>
+<li>un <strong>total UE</strong> pour la même créa</li>
+<li>les <strong>critères de sélection d’audience</strong> : démographie, zones géographiques, signaux contextuels, listes de clients, centres d’intérêt (inclus, exclus, ou non utilisés)</li>
+</ul>
+<p>Google publie en général ces fourchettes seulement après environ 90 jours, et ce sont des fourchettes, pas des comptes exacts. Si la borne haute manque, l’Actor enregistre <code>impressionsMax</code> à <code>null</code>.</p>
+<p>C’est là que ce run devient frappant.</p>
+<p>Une pub image Shopping Nike, ancienne, en France — chaussettes de training mi-mollet Everyday Cushioned, lot de 6, noir, taille 42–46, première mention le 25 octobre 2021 — avait un plancher officiel de <strong>10 000 000 d’impressions en France</strong>, sans borne haute publiée (<code>impressionsMax</code> est <code>null</code>). La répartition : Search au même plancher de 10 000 000, Shopping 450 000–500 000, YouTube 15 000–20 000. Page officielle : <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR18139369585210556417?region=FR">créa FR CR18139369585210556417</a>.</p>
+<p>La pub Nike en polonais échantillonnée en Allemagne n’avait que <strong>0–1 000 impressions en Allemagne</strong>, mais <strong>250 000–300 000 dans l’UE</strong>. Un petit chiffre national n’est pas une petite campagne.</p>
+<p>Même une requête au Royaume-Uni peut porter un total UE si la créa a aussi tourné dans l’Union. La pub Black Friday Nike vue au Royaume-Uni n’a pas de fourchette d’impressions britannique, mais Google reporte 2 000–3 000 impressions UE pour cette créa, parce qu’elle a aussi été diffusée en France, en Allemagne, en Espagne et en Italie, entre autres.</p>
+<h2>Comment reproduire ce run</h2>
+<h3>Python</h3>
+<pre><code>from apify_client import ApifyClient
+
+client = ApifyClient(&quot;YOUR_APIFY_TOKEN&quot;)  # https://console.apify.com/settings/integrations
+run = client.actor(&quot;xsi/google-ads-transparency&quot;).call(
+    run_input={
+        &quot;mode&quot;: &quot;search&quot;,
+        &quot;queries&quot;: [&quot;nike.com&quot;, &quot;adidas.com&quot;],
+        &quot;regions&quot;: [&quot;US&quot;, &quot;GB&quot;, &quot;DE&quot;, &quot;FR&quot;],
+        &quot;includeDetails&quot;: True,
+        &quot;includeAdText&quot;: True,
+        &quot;maxAdsPerQuery&quot;: 2,
+        &quot;maxItems&quot;: 16,
+    },
+    timeout_secs=480,
+    memory_mbytes=256,
+    max_total_charge_usd=0.08,
+)
+for ad in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
+    print(ad[&quot;query&quot;], ad[&quot;region&quot;], ad.get(&quot;headline&quot;), ad.get(&quot;selectedRegion&quot;))</code></pre>
+<p>Les versions JavaScript et cURL sont dans le <a href="https://github.com/Bilal10B/google-ads-transparency-mcp/tree/main/examples">dossier examples</a>. Remplacez les domaines et les codes pays pour n’importe quel autre concurrent : <code>shopify.com</code>, <code>apple.com</code>, le rival d’un client, ce que vous voulez.</p>
+<h3>MCP, pour les agents IA</h3>
+<p>Le même produit est un serveur MCP distant (Streamable HTTP) :</p>
+<pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;google-ads-transparency&quot;: {
+      &quot;url&quot;: &quot;https://xsi--google-ads-transparency.apify.actor/mcp&quot;,
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer YOUR_APIFY_TOKEN&quot;
+      }
+    }
+  }
+}</code></pre>
+<p>Outils :</p>
+<ul>
+<li><code>find_advertiser</code> — nom ou site → identifiants d’annonceurs</li>
+<li><code>list_ads</code> — pubs d’un domaine ou d’un annonceur, filtrées par pays, format, plateforme et dates</li>
+<li><code>get_ad_details</code> — une pub, avec impressions et ciblage UE lorsqu’ils existent</li>
+<li><code>new_ads_since</code> — pubs d’abord vues à partir d’une date, pour une veille quotidienne ou hebdomadaire</li>
+</ul>
+<p>On peut alors demander à un agent : « Quelles nouvelles pubs Nike a-t-il lancées aux États-Unis et en Allemagne depuis le 1er novembre ? » ou « Compare le volume de pubs adidas.com au Royaume-Uni et en France. »</p>
+<h2>Tarifs (prix affichés)</h2>
+<p>On ne paie que les résultats. Le calcul et le proxy sont inclus. Pas de frais de lancement.</p>
+<table><thead><tr><th>Événement</th><th>Prix</th></tr></thead><tbody><tr><td>Pub</td><td>0,001 $</td></tr><tr><td>Pub avec détails UE (remplace le prix « pub »)</td><td>0,002 $</td></tr><tr><td>Texte de la pub, seulement s’il est trouvé</td><td>0,001 $</td></tr><tr><td>Appel d’outil MCP</td><td>0,005 $, plus les événements ci-dessus</td></tr></tbody></table>
+<p>Un run ne dépasse jamais <em>Max ads per query</em>, <em>Max items</em> ou <em>Max cost per run</em>. Les résultats vides ou en échec ne sont pas facturés.</p>
+<h2>Avertissement</h2>
+<p>Il s’agit de données publiques du Ads Transparency Center de Google. Ce n’est pas un accès au compte pub privé de qui que ce soit. Les impressions sont des fourchettes officielles publiées par Google au titre du DSA ; elles ne sont en général disponibles qu’après environ 90 jours, ce sont des fourchettes et non des comptes exacts, et elles ne sont pas publiées hors UE. Ouvrez toujours l’URL officielle <code>transparencyUrl</code> pour vérifier une fiche.</p>
+<p>Les noms Nike, Adidas et d’autres marques sont utilisés uniquement comme exemples de données publiques de transparence.</p>
+<h2>Liens</h2>
+<ul>
+<li><a href="https://apify.com/xsi/google-ads-transparency">Actor Google Ads Transparency sur le Store Apify</a></li>
+<li><a href="https://xsi--google-ads-transparency.apify.actor/mcp">Endpoint MCP</a></li>
+<li><a href="https://github.com/Bilal10B/google-ads-transparency-mcp/blob/main/examples/sample-output.json">Échantillon de ce run</a></li>
+<li><a href="https://adstransparency.google.com/">Google Ads Transparency Center</a></li>
+</ul>
+</main>
+<footer>
+  <p>Public data from Google's Ads Transparency Center. Documentation under the MIT License.</p>
+</footer>
+</body>
+</html>

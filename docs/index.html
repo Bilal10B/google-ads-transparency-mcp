@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to track any competitor&#x27;s Google Ads (and get EU impression data) with an API / MCP</title>
+<meta name="description" content="Track any competitor's Google ads worldwide with an API or MCP server, plus official EU impression data.">
+<link rel="icon" href="logo.png" type="image/png">
+<style>
+:root { --bg:#f6f4ef; --card:#fff; --ink:#1b1b18; --muted:#5c5a54; --line:#e4e0d6; --accent:#0b5fff; }
+* { box-sizing:border-box; }
+html,body { margin:0; background:var(--bg); color:var(--ink);
+  font:18px/1.6 "Source Serif 4", "Iowan Old Style", Georgia, serif; }
+header, main, footer { max-width:760px; margin:0 auto; padding:0 24px; }
+header { padding-top:36px; padding-bottom:8px; }
+header img { width:64px; height:64px; border-radius:16px; display:block; margin-bottom:16px; }
+header .brand { font-family:ui-sans-serif,system-ui,sans-serif; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+h1 { font-size:2rem; line-height:1.2; margin:.3em 0 .6em; }
+h2 { font-size:1.35rem; margin-top:2em; }
+h3 { font-size:1.1rem; }
+a { color:var(--accent); }
+p,li { color:var(--ink); }
+.muted, footer { color:var(--muted); font-size:.95rem; }
+nav a { margin-right:1rem; font-family:ui-sans-serif,system-ui,sans-serif; font-size:14px; }
+table { border-collapse:collapse; width:100%; font-size:15px; margin:1.2em 0; background:var(--card); }
+th,td { border:1px solid var(--line); padding:.5em .7em; text-align:left; vertical-align:top; }
+th { background:#f0eee8; }
+pre { background:#1b1b18; color:#f6f4ef; padding:16px; overflow:auto; border-radius:10px; font-size:14px; line-height:1.45; }
+code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em; }
+p code, li code, td code { background:#efece4; padding:.1em .35em; border-radius:4px; }
+pre code { background:none; padding:0; color:inherit; }
+blockquote { margin:1em 0; padding-left:1em; border-left:3px solid var(--line); color:var(--muted); }
+hr { border:0; border-top:1px solid var(--line); margin:2.5em 0; }
+footer { padding:40px 24px 64px; }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Google Ads Transparency logo" width="64" height="64">
+  <div class="brand">Google Ads Transparency — API &amp; MCP</div>
+  <nav>
+    <a href="fr.html">Français</a>
+    <a href="https://apify.com/xsi/google-ads-transparency">Apify Store</a>
+    <a href="https://github.com/Bilal10B/google-ads-transparency-mcp#google-ads-transparency-mcp--api">README</a>
+  </nav>
+</header>
+<main>
+<h1>How to track any competitor&#x27;s Google Ads (and get EU impression data) with an API / MCP</h1>
+<p>You do not need access to a rival&#x27;s Google Ads account to see what they are running. Google already publishes a public library — the <a href="https://adstransparency.google.com/">Ads Transparency Center</a> — covering Search, YouTube, Shopping, Maps and Google Play, in every country Google supports.</p>
+<p>This article shows how to pull that data through an API, or let an AI agent do it over MCP, using the public <a href="https://apify.com/xsi/google-ads-transparency">Google Ads Transparency Actor</a> on Apify. The walkthrough is a <strong>real run</strong> from 26 November 2026, comparing <strong>Nike vs Adidas</strong> in the <strong>United States, United Kingdom, Germany and France</strong>. EU impression ranges appear only at the end, as a bonus that exists in the EU and EEA and not in the US or the UK.</p>
+<p>It is written for marketers, agencies, e-commerce teams, and people building ad-intelligence tools or AI agents.</p>
+<h2>What I actually ran</h2>
+<p>On 26 November 2026 at 10:48 (Europe/Brussels, 09:48 UTC) I started Apify Actor run <a href="https://console.apify.com/view/runs/biPCUmNEKOhNQP5oO"><code>biPCUmNEKOhNQP5oO</code></a> with this input:</p>
+<pre><code>{
+  &quot;mode&quot;: &quot;search&quot;,
+  &quot;queries&quot;: [&quot;nike.com&quot;, &quot;adidas.com&quot;],
+  &quot;regions&quot;: [&quot;US&quot;, &quot;GB&quot;, &quot;DE&quot;, &quot;FR&quot;],
+  &quot;includeDetails&quot;: true,
+  &quot;includeAdText&quot;: true,
+  &quot;maxAdsPerQuery&quot;: 2,
+  &quot;maxItems&quot;: 16
+}</code></pre>
+<p>That is two ads per brand and country — 16 ads, not a full dump. The point was to measure volume, then look closely at a small, real sample of creatives and copy.</p>
+<p>The run finished in <strong>46.8 seconds</strong>. It billed 16 “ad-detail” events and 13 “ad-copy” events, which at the Actor&#x27;s list prices is <strong>$0.045</strong>. There is no start fee. I also set a hard cap of $0.08 so the run could not exceed that. Apify recorded $0.0021 of platform usage (compute and proxy) for the run; those costs are included in the event prices for paying users.</p>
+<p>Google refused a few requests along the way (2 rate limits and 1 CAPTCHA page out of 39 HTTP requests, a 5.1% refusal rate). The Actor retried and rotated the proxy session. It does not solve CAPTCHA pages. All 16 items came back, with 0 errors.</p>
+<p>A free Apify account includes $5 of monthly credit, which is enough to repeat this kind of check many times.</p>
+<h2>First, the volumes</h2>
+<p>Before looking at any headline, Google already tells you how many ads it holds for each domain in each country. These figures are Google&#x27;s own ranges for the <strong>global domains</strong> <code>nike.com</code> and <code>adidas.com</code>. A brand may also advertise under a country site (for example <code>adidas.co.uk</code>); that would be a separate query, and I did not run one here.</p>
+<table><thead><tr><th>Domain</th><th>United States</th><th>United Kingdom</th><th>Germany</th><th>France</th></tr></thead><tbody><tr><td>nike.com</td><td>8,000–9,000 ads</td><td>2,000–3,000</td><td>9,000–10,000</td><td>8,000–9,000</td></tr><tr><td>adidas.com</td><td>4,000–5,000 ads</td><td>68</td><td>600–700</td><td>600–700</td></tr></tbody></table>
+<p>In this snapshot, Nike&#x27;s global domain had a much larger Transparency Center footprint than Adidas&#x27;s in every market I queried. The gap is especially large in the UK (thousands of Nike ads vs 68 Adidas ads on <code>adidas.com</code>). That is not the same thing as ad spend, and it is not a ranking of creative quality. It is a hard, official count of ads Google has on file for those domains.</p>
+<p>The legal entities behind the sample were also consistent: <strong>Nike, Inc.</strong> in the US, <strong>Nike Retail BV</strong> in the UK, Germany and France, and <strong>Adidas America, Inc.</strong> in all four countries.</p>
+<h2>What the ads were saying on 26 November 2026</h2>
+<p>The 16 returned ads are a sample of two per cell, not “the top ads.” Still, the copy is specific enough to be useful.</p>
+<p><strong>Nike was in a Black Friday push.</strong> A US text ad first shown on 22 November 2026 (05:02 UTC) and still serving on 26 November promoted the Nike Golf collection: “Save big this Black Friday using code BFRIDAY for an extra 25% off select styles.” Official page: <a href="https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR09898538327395532801?region=US">US creative CR09898538327395532801</a>.</p>
+<p>A UK text ad from Nike Retail BV used a broader Black Friday line: “Nike Black Friday Days Are On” / “Up To 40% Off Selected Styles. Ends On December 1st.” Google first recorded that creative on 19 September 2025, and it was still serving on 26 November 2026. Official page: <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR00669994402592063489?region=GB">GB creative CR00669994402592063489</a>.</p>
+<p>In France, a text ad promoted <strong>NikeSKIMS</strong> pilates wear (“Introducing An Updated Take On Pilates Wear From NikeSKIMS.”), first shown on 20 February 2026. Official page: <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR13374024866886320129?region=FR">FR creative CR13374024866886320129</a>.</p>
+<p><strong>Adidas&#x27;s sample was more evergreen.</strong> In the US, one of the two ads was a YouTube video (<code>WVLa-eUBGjE</code>, first shown 11 November 2026). Official page: <a href="https://adstransparency.google.com/advertiser/AR14017378248766259201/creative/CR03714073080885149697?region=US">US creative CR03714073080885149697</a>. The other US ad, also running in Germany and France under the same creative ID, sold the Terrex Freehiker 3: “Not a hiker? You Are Now.” Official page: <a href="https://adstransparency.google.com/advertiser/AR14017378248766259201/creative/CR02127259033550192641?region=US">US creative CR02127259033550192641</a>.</p>
+<p>In the UK, Adidas copy included “Shop The adidas Official Site Today. Free Shipping For Members On All Orders.” and “Shop The Three Stripes.” In Germany and France the sample also included socks, kids&#x27; shoes and clothing, and the same Freehiker ad.</p>
+<p>Two practical lessons from a 16-ad sample:</p>
+<ol>
+<li>1. <strong>The same creative can appear in several countries.</strong> The Freehiker ad showed up in the US, Germany and France in this run. You can de-duplicate by <code>creativeId</code>.</li>
+<li>2. <strong>The language of the copy is not always the language of the country you queried.</strong> A Nike ad sampled in Germany had Polish copy (“Oficjalna strona Nike” / Black Friday discounts up to 40% until 1 December). It was also shown in Poland, among other countries. Official page: <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR07648843056275259393?region=DE">DE creative CR07648843056275259393</a>.</li>
+</ol>
+<h2>The EU bonus: official impression ranges</h2>
+<p>Google does <strong>not</strong> publish impression counts for the United States or the United Kingdom. If you only work in those markets, you still get advertiser names, formats, first/last shown dates, countries, copy and official ad URLs.</p>
+<p>In the EU and EEA, the Digital Services Act requires a public repository of ads with more detail. For those countries the Actor adds, when Google has published them:</p>
+<ul>
+<li>an official <strong>impression range</strong> for the country you asked for</li>
+<li>a <strong>breakdown by platform</strong> (Search, YouTube, Shopping, Maps, Play)</li>
+<li>an <strong>EU-wide total</strong> for the same creative</li>
+<li><strong>audience-selection criteria</strong>: whether demographics, locations, contextual signals, customer lists and topics of interest were included, excluded, or not used</li>
+</ul>
+<p>Google typically publishes the ranges only after about 90 days, and they are ranges, not exact counts. If an upper bound is missing, the Actor stores <code>impressionsMax</code> as <code>null</code>.</p>
+<p>That bonus is where this run gets striking.</p>
+<p>A long-running Nike Shopping image ad in France — mid-calf Everyday Cushioned training socks, 6-pack, black, size 42–46, first recorded on 25 October 2021 — had an official floor of <strong>10,000,000 impressions in France</strong>, with no upper bound published (<code>impressionsMax</code> is null). The platform split was Search at the same 10,000,000 floor, Shopping 450,000–500,000, and YouTube 15,000–20,000. Official page: <a href="https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR18139369585210556417?region=FR">FR creative CR18139369585210556417</a>.</p>
+<p>The Polish-language Nike ad sampled in Germany had only <strong>0–1,000 impressions in Germany</strong>, but <strong>250,000–300,000 across the EU</strong>. A small country number is not the same as a small campaign.</p>
+<p>Even a UK query can carry an EU total when the same creative also ran in the EU. The Nike UK Black Friday ad above has no UK impression range, but Google reports 2,000–3,000 EU impressions for that creative, because it also ran in countries such as France, Germany, Spain and Italy.</p>
+<h2>How to reproduce this</h2>
+<h3>Python</h3>
+<pre><code>from apify_client import ApifyClient
+
+client = ApifyClient(&quot;YOUR_APIFY_TOKEN&quot;)  # https://console.apify.com/settings/integrations
+run = client.actor(&quot;xsi/google-ads-transparency&quot;).call(
+    run_input={
+        &quot;mode&quot;: &quot;search&quot;,
+        &quot;queries&quot;: [&quot;nike.com&quot;, &quot;adidas.com&quot;],
+        &quot;regions&quot;: [&quot;US&quot;, &quot;GB&quot;, &quot;DE&quot;, &quot;FR&quot;],
+        &quot;includeDetails&quot;: True,
+        &quot;includeAdText&quot;: True,
+        &quot;maxAdsPerQuery&quot;: 2,
+        &quot;maxItems&quot;: 16,
+    },
+    timeout_secs=480,
+    memory_mbytes=256,
+    max_total_charge_usd=0.08,
+)
+for ad in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
+    print(ad[&quot;query&quot;], ad[&quot;region&quot;], ad.get(&quot;headline&quot;), ad.get(&quot;selectedRegion&quot;))</code></pre>
+<p>JavaScript and cURL versions are in the <a href="https://github.com/Bilal10B/google-ads-transparency-mcp/tree/main/examples">examples folder</a>. Swap the domains and country codes for any other competitor: <code>shopify.com</code>, <code>apple.com</code>, a client&#x27;s rival, whatever you need.</p>
+<h3>MCP, for AI agents</h3>
+<p>The same product is a remote MCP server (Streamable HTTP):</p>
+<pre><code>{
+  &quot;mcpServers&quot;: {
+    &quot;google-ads-transparency&quot;: {
+      &quot;url&quot;: &quot;https://xsi--google-ads-transparency.apify.actor/mcp&quot;,
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer YOUR_APIFY_TOKEN&quot;
+      }
+    }
+  }
+}</code></pre>
+<p>Tools:</p>
+<ul>
+<li><code>find_advertiser</code> — name or website → advertiser IDs</li>
+<li><code>list_ads</code> — ads for a domain or advertiser, filtered by country, format, platform and dates</li>
+<li><code>get_ad_details</code> — one ad, including EU impressions and targeting when they exist</li>
+<li><code>new_ads_since</code> — ads first shown on or after a date, for a daily or weekly watch</li>
+</ul>
+<p>An agent can then be asked, for example: “What new ads has Nike run in the US and Germany since 1 November?” or “Compare adidas.com ad volume in the UK and France.”</p>
+<h2>Pricing (list prices)</h2>
+<p>You only pay for results. Compute and proxy are included. No start fee.</p>
+<table><thead><tr><th>Event</th><th>Price</th></tr></thead><tbody><tr><td>Ad</td><td>$0.001</td></tr><tr><td>Ad with EU details (replaces the ad price)</td><td>$0.002</td></tr><tr><td>Ad copy, only when it is found</td><td>$0.001</td></tr><tr><td>MCP tool call</td><td>$0.005, plus the events above</td></tr></tbody></table>
+<p>A run never exceeds <em>Max ads per query</em>, <em>Max items</em>, or <em>Max cost per run</em>. Empty or failed results are not billed.</p>
+<h2>Disclaimer</h2>
+<p>This is public data from Google&#x27;s Ads Transparency Center. It is not access to anyone&#x27;s private ads account. Impression figures are official ranges published by Google under the EU DSA; they are usually available only after about 90 days, they are ranges rather than exact counts, and they are not published for non-EU countries. Always open the official <code>transparencyUrl</code> if you need to verify a record.</p>
+<p>Nike, Adidas and other brand names are used here only as examples of public transparency data.</p>
+<h2>Links</h2>
+<ul>
+<li><a href="https://apify.com/xsi/google-ads-transparency">Google Ads Transparency Actor on the Apify Store</a></li>
+<li><a href="https://xsi--google-ads-transparency.apify.actor/mcp">MCP endpoint</a></li>
+<li><a href="https://github.com/Bilal10B/google-ads-transparency-mcp/blob/main/examples/sample-output.json">Sample output from this run</a></li>
+<li><a href="https://adstransparency.google.com/">Google Ads Transparency Center</a></li>
+</ul>
+</main>
+<footer>
+  <p>Public data from Google's Ads Transparency Center. Documentation under the MIT License.</p>
+</footer>
+</body>
+</html>

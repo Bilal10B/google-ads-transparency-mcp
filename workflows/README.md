@@ -4,7 +4,21 @@ Every Monday, get the Google ads that **became "winning" this week** (still runn
 
 Cost: 5 competitors × 50 ads ≈ $0.25 per week ($1 per 1,000 ads). The Apify free plan gives $5 of credit every month. Websites with no ads cost nothing and are listed at the bottom of the report.
 
+## n8n template gallery file (recommended import)
+
+For a first install, import [`n8n-weekly-winning-ads-slack.gallery.json`](n8n-weekly-winning-ads-slack.gallery.json). It follows the official [n8n template submission guidelines](https://docs.n8n.io/contribute/create-templates/submission-guidelines/): no tokens in node bodies, an **Edit Fields** configuration node, n8n credentials, sticky notes, and continue-on-fail handling for empty or failed Apify results.
+
+1. n8n → **Workflows → Import from file** → pick `n8n-weekly-winning-ads-slack.gallery.json`.
+2. Create an **HTTP Header Auth** credential: header name `Authorization`, value `Bearer` plus your Apify API token (Apify Console → Settings → API & Integrations). Select it on **Run Google Ads Transparency**.
+3. Create a Slack credential (bot token or OAuth2, `chat:write`) and select it on **Post weekly report to Slack**. Invite the bot to the channel.
+4. In **Configure competitors and thresholds**, set your websites, country, day thresholds, ad cap and Slack channel.
+5. Click **Test once**, then **Activate**.
+
+Title, description and categories for a [creators.n8n.io](https://creators.n8n.io) submission are in [`GALLERY-SUBMISSION.md`](GALLERY-SUBMISSION.md). Nothing has been submitted from this repository.
+
 ## n8n (import in 30 seconds)
+
+The two files below are the original shorter variants. The Slack file still expects you to paste an Apify token and a Slack incoming-webhook URL into the HTTP Request nodes. Prefer the gallery file above for new setups.
 
 | File | Destination |
 |---|---|

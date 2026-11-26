@@ -1,0 +1,340 @@
+{
+  "name": "Watch competitors' winning Google Ads each week and post to Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "### How it works\nThis workflow helps paid-search marketers, agencies and e-commerce teams watch competitors' public Google ads each week. Every Monday at 08:00, or when you click **Test once**, it reads the websites, region and thresholds from **Configure competitors and thresholds**, then runs the [xsi/google-ads-transparency](https://apify.com/xsi/google-ads-transparency) Actor on Apify. Official Ads Transparency Center records come back as flat JSON, including a `no_ads_found` row when a domain has nothing to show. The report lists ads that became winning in the lookback window and ads first shown in that window, then posts one Slack message with both lists and any domain that could not be checked. If Apify fails or returns no rows, the workflow still posts a structured report.\n\n### Setup\n1. Create a free Apify account and an n8n **HTTP Header Auth** credential: header name `Authorization`, value `Bearer` plus your Apify API token (Apify Console → Settings → API & Integrations). Select it on **Run Google Ads Transparency**.\n2. Add a Slack credential (bot token or OAuth2, with `chat:write`) and select it on **Post weekly report to Slack**. Invite the bot to the channel.\n3. In **Configure competitors and thresholds**, set `competitorDomains`, `region`, `daysThreshold`, `lookbackDays`, `maxAdsPerQuery` and `slackChannel`.\n4. Click **Test once**, check Slack, then activate the schedule.\n\n**Cost:** the Actor is pay-per-result on Apify (about $0.001 per ad; confirm the current price on the Store page). A free Apify account includes monthly credit that covers small use, such as five competitors × 50 ads. Nothing is charged until you test or activate the workflow.\n\n### Customization\nChange the Monday 08:00 schedule, adjust the winning-ad threshold, or replace the Slack node with Notion or Google Sheets. Keep `maxAdsPerQuery` modest while you test. Repeated weekly runs can list the same ad again if it still falls in the \"new winner\" window.\n",
+        "height": 660,
+        "width": 480,
+        "color": 1
+      },
+      "id": "cf09064f-f052-44b9-ad13-9072e13adaea",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Schedule and configuration\nSet the competitor websites, country, winning-ad day threshold, lookback window, ad cap and Slack channel here. Edit these values instead of changing nodes downstream.\n",
+        "height": 420,
+        "width": 780,
+        "color": 7
+      },
+      "id": "3806df2c-54b4-4471-b1f8-cd708302cd39",
+      "name": "Section: Schedule and configuration",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Fetch official ad records\nStarts one Apify Actor run and waits for the dataset. Authentication is the HTTP Header Auth credential, not a token in this node. On failure the workflow continues so the report can still be built.\n",
+        "height": 420,
+        "width": 440,
+        "color": 7
+      },
+      "id": "39588892-cc9f-428d-b98e-f8597c343d39",
+      "name": "Section: Fetch official ad records",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Build the weekly digest\nKeeps ads that just crossed the winning threshold and ads first shown in the lookback window. Empty results, no-ads rows and request errors become a readable report, so Slack still receives one message.\n",
+        "height": 420,
+        "width": 420,
+        "color": 7
+      },
+      "id": "7328876a-a53b-4a27-bf33-9fb65141c9eb",
+      "name": "Section: Build the weekly digest",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Post to Slack\nSends the digest to the channel from the configuration node, using your Slack credential. If Slack is unreachable, the node continues on fail so the execution still completes.\n",
+        "height": 420,
+        "width": 420,
+        "color": 7
+      },
+      "id": "8d2d5ba4-85f4-4237-9c78-ac8b6fc55531",
+      "name": "Section: Post to Slack",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1780,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "content": "**Paid Apify run.** This node starts a chargeable Actor run. Test with a low `maxAdsPerQuery` first. Free Apify credit usually covers small tests.\n",
+        "height": 160,
+        "width": 300,
+        "color": 3
+      },
+      "id": "77efff32-e3b3-4b6d-aaf6-e6073825f6d9",
+      "name": "Warning: paid Apify run",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        940,
+        40
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "13d42563-0e4c-4661-9ec7-ff3a2bc4456d",
+      "name": "Test once",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        160,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "9dc4fe9b-ee5b-4b94-b20e-0bbee6b5a13a",
+      "name": "Every Monday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3263931b-2a5b-410a-bb64-6e76e67f553e",
+              "name": "competitorDomains",
+              "value": "nike.com, adidas.com, puma.com, newbalance.com, asics.com",
+              "type": "string"
+            },
+            {
+              "id": "262152f9-404c-4fca-b7d5-878baf6dc634",
+              "name": "region",
+              "value": "US",
+              "type": "string"
+            },
+            {
+              "id": "c2bfe489-b25f-46fd-9e08-0cb2511188d1",
+              "name": "daysThreshold",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "3a4c0b40-a7b5-4b99-913f-141f985c39cc",
+              "name": "lookbackDays",
+              "value": 7,
+              "type": "number"
+            },
+            {
+              "id": "6622ebfa-5fef-43a6-88da-a54c3352f0b9",
+              "name": "maxAdsPerQuery",
+              "value": 50,
+              "type": "number"
+            },
+            {
+              "id": "9df0cca8-88dc-49a3-97e2-72c29196c085",
+              "name": "slackChannel",
+              "value": "#competitor-ads",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      },
+      "id": "0d36574f-5ad2-4a3e-a3d7-a72faed80d6b",
+      "name": "Configure competitors and thresholds",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        200
+      ],
+      "notes": "competitorDomains: comma-separated websites (example values are placeholders — replace them with your competitors).\nregion: Ads Transparency country code (US, GB, FR, DE, BE, …).\ndaysThreshold: an ad is treated as winning after this many days still running (default 30).\nlookbackDays: window for “this week” in the report (default 7).\nmaxAdsPerQuery: cap per website and country. Keep this low for the first test.\nslackChannel: destination channel, including the #.",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/xsi~google-ads-transparency/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ domains: String($json.competitorDomains || '').split(',').map((s) => s.trim()).filter(Boolean), regions: [String($json.region || 'US').trim()].filter(Boolean), maxAdsPerQuery: Number($json.maxAdsPerQuery) || 50, winningAdMinDays: Number($json.daysThreshold) || 30, compactOutput: true }) }}",
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "88bbf8b0-b517-4a7a-a6ec-de78c43c7bf7",
+      "name": "Run Google Ads Transparency",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APIFY_HTTP_HEADER_AUTH",
+          "name": "Apify API"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true,
+      "notes": "Uses an HTTP Header Auth credential (header name Authorization, value Bearer plus your Apify token). Do not paste the token into this node. Timeout is 5 minutes because the Actor run is synchronous.",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Weekly digest: ads that became \"winning\" in the lookback window, and new launches.\n// Config is read from the Edit Fields node so a failed or empty Apify response still has thresholds.\nfunction getConfig() {\n  try {\n    return $('Configure competitors and thresholds').first().json || {};\n  } catch (error) {\n    return ($input.first() && $input.first().json) || {};\n  }\n}\n\nconst config = getConfig();\nconst daysThreshold = Number(config.daysThreshold) || 30;\nconst lookbackDays = Number(config.lookbackDays) || 7;\nconst slackChannel = String(config.slackChannel || '#competitor-ads').trim();\n\nfunction flatten(item) {\n  const j = item == null ? {} : item;\n  if (Array.isArray(j)) return j;\n  if (Array.isArray(j.data)) return j.data;\n  if (typeof j === 'object' && Object.keys(j).length === 0) return [];\n  if (j.error || j.errorMessage) {\n    const raw = j.error && typeof j.error === 'object' ? (j.error.message || JSON.stringify(j.error)) : (j.error || j.errorMessage);\n    return [{ status: 'request_failed', inputDomain: 'apify', detail: String(raw) }];\n  }\n  return [j];\n}\n\nconst rows = $input.all().flatMap((item) => flatten(item.json));\nconst ok = rows.filter((row) => row && row.status === 'ok');\nconst other = rows.filter((row) => row && row.status && row.status !== 'ok');\nif (rows.length === 0) {\n  other.push({ inputDomain: '(none)', status: 'no_rows', detail: 'The Actor returned no items. Check the domains, region and your Apify credential.' });\n}\n\nconst ageDays = (date) => (Date.now() - Date.parse(String(date) + 'T00:00:00Z')) / 864e5;\nconst newWinners = ok.filter((row) => row.isWinningAd && Number(row.daysActive) <= daysThreshold + lookbackDays);\nconst launches = ok.filter((row) => row.firstShownDate && ageDays(row.firstShownDate) <= lookbackDays);\nconst allWinners = ok.filter((row) => row.isWinningAd);\n\nconst line = (row) => {\n  const domain = row.inputDomain || row.domain || 'unknown';\n  const format = row.format || 'ad';\n  const headline = row.headline ? ` · \"${row.headline}\"` : '';\n  const days = row.daysActive != null ? ` · ${row.daysActive} days` : '';\n  const url = row.transparencyUrl ? ` · <${row.transparencyUrl}|view>` : '';\n  return `• *${domain}* · ${format}${headline}${days}${url}`;\n};\n\nconst text = [\n  `*Competitor Google Ads — weekly report* (${ok.length} ads checked, ${allWinners.length} winning ads running ${daysThreshold}+ days)`,\n  `*New winning ads this week* (crossed ${daysThreshold} days, still running): ${newWinners.length}`,\n  ...newWinners.slice(0, 15).map(line),\n  `*New ads launched in the last ${lookbackDays} days*: ${launches.length}`,\n  ...launches.slice(0, 15).map(line),\n  other.length ? `_No ads / not checked: ${other.map((row) => `${row.inputDomain || 'unknown'} (${row.status}${row.detail ? ` — ${row.detail}` : ''})`).join(', ')}_` : '',\n].filter(Boolean).join('\\n');\n\nconst tag = (row, type) => ({ ...row, reportType: type });\nreturn [{\n  json: {\n    text,\n    slackChannel,\n    adsCount: ok.length,\n    newWinnersCount: newWinners.length,\n    launchesCount: launches.length,\n    ads: [...newWinners.map((row) => tag(row, 'New winner')), ...launches.map((row) => tag(row, 'New launch'))],\n  },\n}];\n"
+      },
+      "id": "c4e86cc1-b2e2-4183-b22e-cf3830b4c360",
+      "name": "Build weekly winning ads report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        200
+      ],
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $json.slackChannel }}"
+        },
+        "text": "={{ $json.text }}",
+        "otherOptions": {}
+      },
+      "id": "5a12c0a8-0cf2-4a40-9e4a-e0ea5443c3e2",
+      "name": "Post weekly report to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1880,
+        200
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "SLACK_API",
+          "name": "Slack account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "alwaysOutputData": true,
+      "notes": "Uses your Slack credential (access token or switch Authentication to OAuth2). Invite the bot to the channel set in the configuration node. The channel name is not hardcoded.",
+      "notesInFlow": false
+    }
+  ],
+  "connections": {
+    "Test once": {
+      "main": [
+        [
+          {
+            "node": "Configure competitors and thresholds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Monday 08:00": {
+      "main": [
+        [
+          {
+            "node": "Configure competitors and thresholds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure competitors and thresholds": {
+      "main": [
+        [
+          {
+            "node": "Run Google Ads Transparency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Google Ads Transparency": {
+      "main": [
+        [
+          {
+            "node": "Build weekly winning ads report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build weekly winning ads report": {
+      "main": [
+        [
+          {
+            "node": "Post weekly report to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

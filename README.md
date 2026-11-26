@@ -18,7 +18,7 @@ This repository documents the public [Apify Actor](https://apify.com/xsi/google-
 
 ![Sample output: Nike and HubSpot ads in the United States](docs/sample-output.png)
 
-*Real run of 26 Nov 2026: `nike.com` + `hubspot.com`, United States, with ad copy (OCR on).*
+*Real run of 26 Nov 2026: `nike.com` + `hubspot.com`, United States, with ad copy (OCR turned on for this sample; it is off by default since 2.1.14).*
 
 ## Who it is for
 
@@ -29,7 +29,7 @@ This repository documents the public [Apify Actor](https://apify.com/xsi/google-
 ## Why this one
 
 - **Worldwide coverage** from the official Transparency Center: any country Google supports, including the US, UK, Germany, France and dozens more.
-- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad. Text ads that Google keeps only as an image are read with local OCR (+$0.001 only when text is found) and flagged `textFromImage: true`.
+- **Ad copy** when Google's official preview has it: headline, description, visible URL, call-to-action, sitelinks, or the YouTube video ID of a video ad. Text ads that Google keeps only as an image can be read with local OCR, an opt-in option (`"ocrImageAds": true`, +$0.001 only when text is found, flagged `textFromImage: true`). Default runs (OCR off, 256 MB) are billed for ads only: `{"domain":"nike.com"}` took 29–31 s for 25 ads = $0.025 on the FREE plan, 0 `ad-text` events (runs `oxr6VSx5a1yHu9c3B`, `3BijF31qR8ebC1FkX`, 26 Nov 2026).
 - **EU bonus:** official DSA impression ranges by country and platform, plus targeting criteria (demographics, locations, contextual signals, customer lists, topics of interest).
 - **Ready-made signals on every ad (v2.1):** `daysActive`, `isWinningAd`, `isNewLaunch`, `detectedPromoCodes`, `detectedDiscounts`, plus one free `domain_summary` row per website (active, winning and new ads, format split, oldest ad, promo codes).
 - **New-ad and stopped-ad alerts** you can schedule daily or weekly (stopped-ad rows are free).
@@ -181,7 +181,7 @@ You only pay for results. Apify compute and proxy are included in these prices. 
 |---|---|---|---|---|
 | **Ad** (ad copy included) | $0.001 | $0.0009 | $0.0008 | $0.0007 |
 | Ad with EU DSA details (replaces Ad) | $0.0015 | $0.0013 | $0.0012 | $0.001 |
-| OCR ad copy (image-only text ads, only when text is found) | $0.001 | $0.001 | $0.001 | $0.001 |
+| OCR ad copy (opt-in `ocrImageAds`, only when text is found) | $0.001 | $0.001 | $0.001 | $0.001 |
 | Media file saved | $0.002 | | | |
 | Advertiser record (advertiser mode) | $0.002 | | | |
 | Monitored target checked (monitor mode) | $0.001 | | | |

@@ -1,0 +1,598 @@
+{
+  "source": {
+    "actor": "xsi/google-ads-transparency",
+    "runId": "biPCUmNEKOhNQP5oO",
+    "ranAt": "2026-11-26T10:48:11+01:00",
+    "timezone": "Europe/Brussels",
+    "input": {
+      "mode": "search",
+      "queries": [
+        "nike.com",
+        "adidas.com"
+      ],
+      "regions": [
+        "US",
+        "GB",
+        "DE",
+        "FR"
+      ],
+      "includeDetails": true,
+      "includeAdText": true,
+      "maxAdsPerQuery": 2,
+      "maxItems": 16
+    },
+    "note": "Four ads from a 16-ad sample (2 ads per brand and country). Impression ranges are official Google figures under the EU Digital Services Act and are published only for EU/EEA countries. A null impressionsMax means Google did not publish an upper bound. previewUrl fields omitted."
+  },
+  "ads": [
+    {
+      "advertiserId": "AR16735076323512287233",
+      "advertiserName": "Nike, Inc.",
+      "domain": "nike.com",
+      "creativeId": "CR09898538327395532801",
+      "format": "TEXT",
+      "firstShown": "2026-11-22T05:02:42.000Z",
+      "lastShown": "2026-11-26T09:13:25.000Z",
+      "daysShown": 6,
+      "region": "US",
+      "imageUrl": "https://tpc.googlesyndication.com/archive/simgad/7523771938285756145",
+      "transparencyUrl": "https://adstransparency.google.com/advertiser/AR16735076323512287233/creative/CR09898538327395532801?region=US",
+      "paidBy": "Nike, Inc.",
+      "topic": null,
+      "variantsCount": 5,
+      "selectedRegion": {
+        "region": "US",
+        "regionName": "United States",
+        "eu": false,
+        "firstShown": null,
+        "lastShown": "2026-11-26",
+        "impressionsMin": null,
+        "impressionsMax": null,
+        "impressionsByPlatform": [],
+        "impressionsPendingUntil": null
+      },
+      "euDsa": {
+        "totalImpressionsMin": null,
+        "totalImpressionsMax": null,
+        "totalImpressionsByPlatform": [],
+        "audienceSelection": null,
+        "impressionsPendingUntil": null,
+        "note": "Impressions are published by Google only for EU/EEA countries (Digital Services Act) and only some time after an ad starts; null = not (yet) published."
+      },
+      "regionsShown": [
+        "US"
+      ],
+      "regions": [
+        {
+          "region": "US",
+          "regionName": "United States",
+          "eu": false,
+          "firstShown": null,
+          "lastShown": "2026-11-26",
+          "impressionsMin": null,
+          "impressionsMax": null,
+          "impressionsByPlatform": [],
+          "impressionsPendingUntil": null
+        }
+      ],
+      "regionImpressionsMin": null,
+      "regionImpressionsMax": null,
+      "query": "nike.com",
+      "adText": {
+        "headline": "Nike® Golf Collection",
+        "description": "Save big this Black Friday using code BFRIDAY for an extra 25% off select styles.",
+        "displayUrl": "nike.com",
+        "businessName": "Nike",
+        "callToAction": null,
+        "sitelinks": [],
+        "imageUrls": [],
+        "template": "text"
+      },
+      "headline": "Nike® Golf Collection",
+      "description": "Save big this Black Friday using code BFRIDAY for an extra 25% off select styles.",
+      "displayUrl": "nike.com",
+      "callToAction": null,
+      "youtubeVideoId": null,
+      "youtubeUrl": null
+    },
+    {
+      "advertiserId": "AR14017378248766259201",
+      "advertiserName": "Adidas America, Inc",
+      "domain": "adidas.com",
+      "creativeId": "CR03714073080885149697",
+      "format": "VIDEO",
+      "firstShown": "2026-11-11T18:14:08.000Z",
+      "lastShown": "2026-11-26T09:06:51.000Z",
+      "daysShown": 16,
+      "region": "US",
+      "imageUrl": null,
+      "transparencyUrl": "https://adstransparency.google.com/advertiser/AR14017378248766259201/creative/CR03714073080885149697?region=US",
+      "paidBy": null,
+      "topic": null,
+      "variantsCount": 5,
+      "selectedRegion": {
+        "region": "US",
+        "regionName": "United States",
+        "eu": false,
+        "firstShown": null,
+        "lastShown": "2026-11-26",
+        "impressionsMin": null,
+        "impressionsMax": null,
+        "impressionsByPlatform": [],
+        "impressionsPendingUntil": null
+      },
+      "euDsa": {
+        "totalImpressionsMin": null,
+        "totalImpressionsMax": null,
+        "totalImpressionsByPlatform": [],
+        "audienceSelection": null,
+        "impressionsPendingUntil": null,
+        "note": "Impressions are published by Google only for EU/EEA countries (Digital Services Act) and only some time after an ad starts; null = not (yet) published."
+      },
+      "regionsShown": [
+        "US"
+      ],
+      "regions": [
+        {
+          "region": "US",
+          "regionName": "United States",
+          "eu": false,
+          "firstShown": null,
+          "lastShown": "2026-11-26",
+          "impressionsMin": null,
+          "impressionsMax": null,
+          "impressionsByPlatform": [],
+          "impressionsPendingUntil": null
+        }
+      ],
+      "regionImpressionsMin": null,
+      "regionImpressionsMax": null,
+      "query": "adidas.com",
+      "adText": {
+        "headline": null,
+        "description": null,
+        "displayUrl": null,
+        "businessName": null,
+        "callToAction": null,
+        "sitelinks": [],
+        "imageUrls": [],
+        "template": "video",
+        "youtubeVideoId": "WVLa-eUBGjE",
+        "youtubeUrl": "https://www.youtube.com/watch?v=WVLa-eUBGjE",
+        "youtubeVideoIds": [
+          "WVLa-eUBGjE"
+        ]
+      },
+      "headline": null,
+      "description": null,
+      "displayUrl": null,
+      "callToAction": null,
+      "youtubeVideoId": "WVLa-eUBGjE",
+      "youtubeUrl": "https://www.youtube.com/watch?v=WVLa-eUBGjE"
+    },
+    {
+      "advertiserId": "AR18378488041124659201",
+      "advertiserName": "Nike Retail BV",
+      "domain": "nike.com",
+      "creativeId": "CR18139369585210556417",
+      "format": "IMAGE",
+      "firstShown": "2021-10-25T07:00:00.000Z",
+      "lastShown": "2026-11-26T09:13:07.000Z",
+      "daysShown": 1846,
+      "region": "FR",
+      "imageUrl": null,
+      "transparencyUrl": "https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR18139369585210556417?region=FR",
+      "paidBy": "Nike Retail BV",
+      "topic": null,
+      "variantsCount": 5,
+      "selectedRegion": {
+        "region": "FR",
+        "regionName": "France",
+        "eu": true,
+        "firstShown": null,
+        "lastShown": "2026-11-26",
+        "impressionsMin": 10000000,
+        "impressionsMax": null,
+        "impressionsByPlatform": [
+          {
+            "platform": "GOOGLE_SHOPPING",
+            "impressionsMin": 450000,
+            "impressionsMax": 500000
+          },
+          {
+            "platform": "YOUTUBE",
+            "impressionsMin": 15000,
+            "impressionsMax": 20000
+          },
+          {
+            "platform": "GOOGLE_SEARCH",
+            "impressionsMin": 10000000,
+            "impressionsMax": null
+          }
+        ],
+        "impressionsPendingUntil": null
+      },
+      "euDsa": {
+        "totalImpressionsMin": 10000000,
+        "totalImpressionsMax": null,
+        "totalImpressionsByPlatform": [
+          {
+            "platform": "GOOGLE_SHOPPING",
+            "impressionsMin": 450000,
+            "impressionsMax": 500000
+          },
+          {
+            "platform": "YOUTUBE",
+            "impressionsMin": 15000,
+            "impressionsMax": 20000
+          },
+          {
+            "platform": "GOOGLE_SEARCH",
+            "impressionsMin": 10000000,
+            "impressionsMax": null
+          }
+        ],
+        "audienceSelection": {
+          "demographics": "INCLUDED",
+          "geographicLocations": "INCLUDED",
+          "contextualSignals": "INCLUDED_AND_EXCLUDED",
+          "customerLists": "NOT_USED",
+          "topicsOfInterest": "INCLUDED"
+        },
+        "impressionsPendingUntil": null,
+        "note": "Impressions are published by Google only for EU/EEA countries (Digital Services Act) and only some time after an ad starts; null = not (yet) published."
+      },
+      "regionsShown": [
+        "FR"
+      ],
+      "regions": [
+        {
+          "region": "FR",
+          "regionName": "France",
+          "eu": true,
+          "firstShown": null,
+          "lastShown": "2026-11-26",
+          "impressionsMin": 10000000,
+          "impressionsMax": null,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SHOPPING",
+              "impressionsMin": 450000,
+              "impressionsMax": 500000
+            },
+            {
+              "platform": "YOUTUBE",
+              "impressionsMin": 15000,
+              "impressionsMax": 20000
+            },
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 10000000,
+              "impressionsMax": null
+            }
+          ],
+          "impressionsPendingUntil": null
+        }
+      ],
+      "regionImpressionsMin": 10000000,
+      "regionImpressionsMax": null,
+      "query": "nike.com",
+      "adText": {
+        "headline": "Chaussettes de training mi-mollet Nike Everyday Cushioned (6 paires) - Noir - Taille: 42-46",
+        "description": null,
+        "displayUrl": null,
+        "businessName": "Nike Officiel",
+        "callToAction": null,
+        "sitelinks": [],
+        "imageUrls": [
+          "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS1Zw7_fa4BHNna6KEULvnIL3R7IYwc6TOezZ2MvZDIDhMqjvsq"
+        ],
+        "template": "shopping"
+      },
+      "headline": "Chaussettes de training mi-mollet Nike Everyday Cushioned (6 paires) - Noir - Taille: 42-46",
+      "description": null,
+      "displayUrl": null,
+      "callToAction": null,
+      "youtubeVideoId": null,
+      "youtubeUrl": null
+    },
+    {
+      "advertiserId": "AR18378488041124659201",
+      "advertiserName": "Nike Retail BV",
+      "domain": "nike.com",
+      "creativeId": "CR07648843056275259393",
+      "format": "TEXT",
+      "firstShown": "2025-10-24T11:09:21.000Z",
+      "lastShown": "2026-11-26T09:13:28.000Z",
+      "daysShown": 399,
+      "region": "DE",
+      "imageUrl": "https://tpc.googlesyndication.com/archive/simgad/814287022200315910",
+      "transparencyUrl": "https://adstransparency.google.com/advertiser/AR18378488041124659201/creative/CR07648843056275259393?region=DE",
+      "paidBy": "Nike Retail BV",
+      "topic": "Apparel",
+      "variantsCount": 3,
+      "selectedRegion": {
+        "region": "DE",
+        "regionName": "Germany",
+        "eu": true,
+        "firstShown": "2025-10-27",
+        "lastShown": "2026-11-25",
+        "impressionsMin": 0,
+        "impressionsMax": 1000,
+        "impressionsByPlatform": [
+          {
+            "platform": "GOOGLE_SEARCH",
+            "impressionsMin": 0,
+            "impressionsMax": 1000
+          }
+        ],
+        "impressionsPendingUntil": null
+      },
+      "euDsa": {
+        "totalImpressionsMin": 250000,
+        "totalImpressionsMax": 300000,
+        "totalImpressionsByPlatform": [
+          {
+            "platform": "GOOGLE_SEARCH",
+            "impressionsMin": 250000,
+            "impressionsMax": 300000
+          },
+          {
+            "platform": "GOOGLE_SHOPPING",
+            "impressionsMin": 0,
+            "impressionsMax": 1000
+          },
+          {
+            "platform": "GOOGLE_MAPS",
+            "impressionsMin": 0,
+            "impressionsMax": 1000
+          }
+        ],
+        "audienceSelection": {
+          "demographics": "INCLUDED",
+          "geographicLocations": "INCLUDED",
+          "contextualSignals": "INCLUDED",
+          "customerLists": "NOT_USED",
+          "topicsOfInterest": "NOT_USED"
+        },
+        "impressionsPendingUntil": null,
+        "note": "Impressions are published by Google only for EU/EEA countries (Digital Services Act) and only some time after an ad starts; null = not (yet) published."
+      },
+      "regionsShown": [
+        "HR",
+        "BE",
+        "DE",
+        "PL",
+        "IT",
+        "NL",
+        "ES",
+        "CZ",
+        "AT",
+        "GR",
+        "NO"
+      ],
+      "regions": [
+        {
+          "region": "HR",
+          "regionName": "Croatia",
+          "eu": true,
+          "firstShown": "2026-04-16",
+          "lastShown": "2026-11-20",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "BE",
+          "regionName": "Belgium",
+          "eu": true,
+          "firstShown": "2025-11-02",
+          "lastShown": "2026-11-21",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "DE",
+          "regionName": "Germany",
+          "eu": true,
+          "firstShown": "2025-10-27",
+          "lastShown": "2026-11-25",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "PL",
+          "regionName": "Poland",
+          "eu": true,
+          "firstShown": "2025-10-24",
+          "lastShown": "2026-11-26",
+          "impressionsMin": 250000,
+          "impressionsMax": 300000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 250000,
+              "impressionsMax": 300000
+            },
+            {
+              "platform": "GOOGLE_MAPS",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            },
+            {
+              "platform": "GOOGLE_SHOPPING",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "IT",
+          "regionName": "Italy",
+          "eu": true,
+          "firstShown": "2025-11-01",
+          "lastShown": "2026-11-21",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            },
+            {
+              "platform": "GOOGLE_MAPS",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "NL",
+          "regionName": "Netherlands",
+          "eu": true,
+          "firstShown": "2025-11-02",
+          "lastShown": "2026-11-26",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "ES",
+          "regionName": "Spain",
+          "eu": true,
+          "firstShown": "2025-11-03",
+          "lastShown": "2026-11-22",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "CZ",
+          "regionName": "Czechia",
+          "eu": true,
+          "firstShown": "2025-11-03",
+          "lastShown": "2026-11-24",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "AT",
+          "regionName": "Austria",
+          "eu": true,
+          "firstShown": "2025-11-04",
+          "lastShown": "2026-11-25",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "GR",
+          "regionName": "Greece",
+          "eu": true,
+          "firstShown": "2025-12-27",
+          "lastShown": "2026-11-21",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        },
+        {
+          "region": "NO",
+          "regionName": "Norway",
+          "eu": false,
+          "firstShown": "2025-11-04",
+          "lastShown": "2026-11-22",
+          "impressionsMin": 0,
+          "impressionsMax": 1000,
+          "impressionsByPlatform": [
+            {
+              "platform": "GOOGLE_SEARCH",
+              "impressionsMin": 0,
+              "impressionsMax": 1000
+            }
+          ],
+          "impressionsPendingUntil": null
+        }
+      ],
+      "regionImpressionsMin": 0,
+      "regionImpressionsMax": 1000,
+      "query": "nike.com",
+      "adText": {
+        "headline": "Oficjalna strona Nike",
+        "description": "Dni Nike Black Friday Days wystartowały. Zniżki do 40% na wybrane produkty. Do 1 grudnia.",
+        "displayUrl": "nike.com",
+        "businessName": null,
+        "callToAction": null,
+        "sitelinks": [],
+        "imageUrls": [],
+        "template": "text"
+      },
+      "headline": "Oficjalna strona Nike",
+      "description": "Dni Nike Black Friday Days wystartowały. Zniżki do 40% na wybrane produkty. Do 1 grudnia.",
+      "displayUrl": "nike.com",
+      "callToAction": null,
+      "youtubeVideoId": null,
+      "youtubeUrl": null
+    }
+  ]
+}

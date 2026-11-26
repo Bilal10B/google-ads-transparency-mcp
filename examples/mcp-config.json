@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "google-ads-transparency": {
+      "url": "https://xsi--google-ads-transparency.apify.actor/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_APIFY_TOKEN"
+      }
+    }
+  }
+}

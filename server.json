@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Bilal10B/google-ads-transparency",
+  "title": "Google Ads Transparency \u2014 API & MCP",
+  "description": "See any competitor's Google ads worldwide via API or MCP, with official EU impression data.",
+  "version": "1.0.0",
+  "websiteUrl": "https://apify.com/xsi/google-ads-transparency",
+  "repository": {
+    "url": "https://github.com/Bilal10B/google-ads-transparency-mcp",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://apify-image-uploads-prod.s3.us-east-1.amazonaws.com/hDmUX7LGyhrnxpjHh-actor-wSrbgwU2Kp5kkJMGf-y3ArR7QZF0-logo.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://xsi--google-ads-transparency.apify.actor/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token: the word 'Bearer', a space, then your Apify API token from https://console.apify.com/settings/integrations. A free Apify account includes $5 of monthly credit.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "name": "Weekly Competitor Google Ads Radar (winning, new and stopped ads to Slack and Notion)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Weekly Competitor Google Ads Radar\nEvery Monday this workflow reads your competitors' **public** Google ads (Ads Transparency Center, via the Apify Actor `xsi/google-ads-transparency`) and sends one digest to Slack and Notion:\n- **Winning ads**: still running after 30+ days\n- **New launches**: first shown in the last 7 days\n- **New and stopped ads** since last week (monitor mode)\n- One summary line per competitor, plus promo codes and discounts written in the ads\n\n### Setup (3 minutes)\n1. Create an **HTTP Header Auth** credential: name `Authorization`, value `Bearer YOUR_APIFY_TOKEN`. Select it in both Apify nodes.\n2. Select your **Slack** credential (chat:write) and your **Notion** credential (share the parent page with the integration).\n3. Edit **Configure radar**: competitors, country, Slack channel, Notion parent page ID.\n4. Click **Test once**, check the message, then activate.\n\nThe first run stores a baseline: new/stopped ads show from the second run.",
+        "height": 620,
+        "width": 560
+      },
+      "id": "022c172f-0eb1-5502-9fee-4c9d1e4479e5",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1180,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 1. Schedule and settings\nRuns Monday 08:00 or on Test once. All settings live in one Edit Fields node.",
+        "height": 140,
+        "width": 520,
+        "color": 7
+      },
+      "id": "4a017ce3-7b6c-5e6b-a806-8b0eeb2627e8",
+      "name": "Section: Configure",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 2. Two Apify runs\n**Get current ads**: latest ads per competitor + one free summary row each.\n**Check new and stopped ads**: monitor mode, compares with last week (stopped ads are free; new-ad alerts cost $0.005 each, capped by maxItems).",
+        "height": 180,
+        "width": 520,
+        "color": 7
+      },
+      "id": "1c08a0d2-f328-5924-bfff-ed6ade5fba53",
+      "name": "Section: Fetch",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 3. Build and send\nOne Code node builds the digest (also when a request fails or returns nothing), then posts to Slack and saves a Notion page.",
+        "height": 140,
+        "width": 560,
+        "color": 7
+      },
+      "id": "4a069217-d980-5f39-9969-4378f0084816",
+      "name": "Section: Report",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "content": "**Cost**: pay-per-result on your Apify account, about $0.001 per ad (3 competitors × 25 ads ≈ $0.08 per week, plus $0.001 per ad text read by OCR), monitor $0.001 per competitor checked. Websites with no ads are free. Keep maxAdsPerQuery low while testing. Apify sync runs stop after 300 s: keep about 3 competitors per workflow (5 websites took 162–228 s in our tests).",
+        "height": 140,
+        "width": 520,
+        "color": 3
+      },
+      "id": "a566b554-338d-5c47-8f95-06eea0e7e19a",
+      "name": "Warning: paid Apify runs",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        240
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "11ae42a5-d83d-519c-b6b1-58d4c95ac7b7",
+      "name": "Test once",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "205a7c5d-3bcf-5e83-bb09-3b029eaec122",
+      "name": "Every Monday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -520,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4e2f546-ec71-5020-93ad-e6ae31031b09",
+              "name": "competitorDomains",
+              "value": "nike.com, adidas.com, puma.com",
+              "type": "string"
+            },
+            {
+              "id": "fd3dc729-3db8-58f8-86ab-a6b1dc343e94",
+              "name": "region",
+              "value": "US",
+              "type": "string"
+            },
+            {
+              "id": "454b5167-361d-532f-a273-7ab0ae8d4aac",
+              "name": "daysThreshold",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "399bd739-d339-58c1-a4b2-c4a4e5c6e548",
+              "name": "maxAdsPerQuery",
+              "value": 25,
+              "type": "number"
+            },
+            {
+              "id": "ec4339c1-2a13-53b0-b1b8-6997800f5593",
+              "name": "monitorKey",
+              "value": "weekly-radar",
+              "type": "string"
+            },
+            {
+              "id": "aabc96f4-514d-5687-b65c-aaf52cf07c6d",
+              "name": "maxNewAdAlerts",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "e71232b8-db26-5f61-b1c4-851253ff86ce",
+              "name": "slackChannel",
+              "value": "#competitor-ads",
+              "type": "string"
+            },
+            {
+              "id": "b5ce992b-d9d1-55b2-bef5-9320de872843",
+              "name": "notionParentPageId",
+              "value": "PASTE_NOTION_PAGE_ID",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": false,
+        "options": {}
+      },
+      "id": "61810e03-c9ee-5893-9dd4-9bdcd117f62a",
+      "name": "Configure radar",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -280,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/xsi~google-ads-transparency/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ domains: String($('Configure radar').first().json.competitorDomains || '').split(',').map((s) => s.trim()).filter(Boolean), regions: [String($('Configure radar').first().json.region || 'US').trim()].filter(Boolean), maxAdsPerQuery: Number($('Configure radar').first().json.maxAdsPerQuery) || 25, winningAdMinDays: Number($('Configure radar').first().json.daysThreshold) || 30, compactOutput: true, includeDomainSummary: true }) }}",
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "ab76e37c-b2ad-5129-8674-074604fe500d",
+      "name": "Get current ads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        40,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APIFY_CREDENTIAL",
+          "name": "Apify API"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/xsi~google-ads-transparency/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ mode: \"monitor\", domains: String($('Configure radar').first().json.competitorDomains || '').split(',').map((s) => s.trim()).filter(Boolean), regions: [String($('Configure radar').first().json.region || 'US').trim()].filter(Boolean), monitorKey: String($('Configure radar').first().json.monitorKey || 'weekly-radar'), alertOnStopped: true, ocrImageAds: false, maxItems: Number($('Configure radar').first().json.maxNewAdAlerts) || 30 }) }}",
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "7bd62e16-3c5f-5c20-9976-4e10f77f1e4a",
+      "name": "Check new and stopped ads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        -60
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APIFY_CREDENTIAL",
+          "name": "Apify API"
+        }
+      },
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Weekly radar: winning ads, new launches (search run) + new and stopped ads (monitor run), one message.\nfunction cfg() { try { return $('Configure radar').first().json || {}; } catch (e) { return {}; } }\nconst config = cfg();\nconst daysThreshold = Number(config.daysThreshold) || 30;\nfunction rowsOf(nodeName) {\n  let items = [];\n  try { items = $(nodeName).all(); } catch (e) { return { rows: [], error: `${nodeName} did not run` }; }\n  const rows = [];\n  let error = null;\n  for (const it of items) {\n    const j = it.json == null ? {} : it.json;\n    if (Array.isArray(j)) rows.push(...j);\n    else if (j.error || j.errorMessage) error = String(j.error && typeof j.error === 'object' ? (j.error.message || JSON.stringify(j.error)) : (j.error || j.errorMessage));\n    else if (Object.keys(j).length) rows.push(j);\n  }\n  return { rows, error };\n}\nconst cur = rowsOf('Get current ads');\nconst mon = rowsOf('Check new and stopped ads');\nconst ads = cur.rows.filter((r) => r.status === 'ok');\nconst summaries = cur.rows.filter((r) => r.status === 'domain_summary');\nconst noAds = cur.rows.filter((r) => r.status && !['ok', 'domain_summary'].includes(r.status));\nconst winners = ads.filter((r) => r.isWinningAd).sort((a, b) => (b.daysActive || 0) - (a.daysActive || 0));\nconst launches = ads.filter((r) => r.isNewLaunch);\nconst newAds = mon.rows.filter((r) => r.alert === 'NEW_AD');\nconst stopped = mon.rows.filter((r) => r.alert === 'STOPPED_AD');\nconst promos = [...new Set(ads.flatMap((r) => [...(r.detectedPromoCodes || []), ...(r.detectedDiscounts || [])]))];\nconst line = (r) => `• *${r.inputDomain || r.domain || '?'}* · ${r.format || 'ad'}${r.headline ? ` · \"${r.headline}\"` : ''}${r.daysActive != null ? ` · ${r.daysActive} days` : ''}${r.transparencyUrl ? ` · <${r.transparencyUrl}|view>` : ''}`;\nconst sumLine = (s) => `• *${s.inputDomain}*: ${s.activeAdsCount}/${s.adsReturned} running, ${s.winningAdsCount} winning, ${s.newLaunchesCount} new · formats T${s.formatSplit?.TEXT ?? 0}/I${s.formatSplit?.IMAGE ?? 0}/V${s.formatSplit?.VIDEO ?? 0} · oldest ${s.oldestAdDays ?? '?'} days · Google reports ${s.totalAdsReportedMin ?? '?'}–${s.totalAdsReportedMax ?? '?'} ads`;\nconst firstMonitor = mon.rows.length === 0 && !mon.error;\nconst text = [\n  `*Competitor Google Ads Radar* · ${ads.length} ads checked on ${summaries.length} websites`,\n  ...summaries.map(sumLine),\n  `*Winning ads* (running ${daysThreshold}+ days): ${winners.length}`, ...winners.slice(0, 10).map(line),\n  `*New launches* (first shown in the last 7 days): ${launches.length}`, ...launches.slice(0, 10).map(line),\n  `*New ads since last check*: ${newAds.length}`, ...newAds.slice(0, 10).map(line),\n  `*Stopped ads since last check*: ${stopped.length}`, ...stopped.slice(0, 10).map(line),\n  firstMonitor ? '_No new or stopped ads since the last check. (The very first run only stores a baseline.)_' : '',\n  promos.length ? `*Promo codes and discounts seen*: ${promos.slice(0, 15).join(', ')}` : '',\n  noAds.length ? `_No ads / not checked: ${noAds.map((r) => `${r.inputDomain} (${r.status})`).join(', ')}_` : '',\n  cur.error ? `_Current ads request failed: ${cur.error}_` : '',\n  mon.error ? `_Monitor request failed: ${mon.error}_` : '',\n].filter(Boolean).join('\\n');\nconst notionText = text.length > 1900 ? text.slice(0, 1900) + '… (truncated: Notion allows 2,000 characters per paragraph)' : text;\nreturn [{ json: { text, notionText, slackChannel: String(config.slackChannel || '#competitor-ads'), notionParentPageId: String(config.notionParentPageId || ''),\n  title: `Google Ads Radar ${new Date().toISOString().slice(0, 10)}`, adsChecked: ads.length, winners: winners.length, launches: launches.length, newAds: newAds.length, stopped: stopped.length, promos } }];\n"
+      },
+      "id": "4bf02224-474c-56bb-a2e2-f627839b7411",
+      "name": "Build radar report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        580,
+        -60
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.slackChannel }}",
+          "mode": "name"
+        },
+        "text": "={{ $json.text }}",
+        "otherOptions": {
+          "mrkdwn": true
+        }
+      },
+      "id": "c7c63104-0763-5626-adf6-0b3369413c48",
+      "name": "Post radar to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        860,
+        -160
+      ],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "SLACK_CREDENTIAL",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.notionParentPageId }}",
+          "mode": "id"
+        },
+        "title": "={{ $json.title }}",
+        "blockUi": {
+          "blockValues": [
+            {
+              "textContent": "={{ $json.notionText }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e132383e-aae9-5494-877f-0f77f9e7010f",
+      "name": "Save radar page in Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        860,
+        40
+      ],
+      "credentials": {
+        "notionApi": {
+          "id": "NOTION_CREDENTIAL",
+          "name": "Notion account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Test once": {
+      "main": [
+        [
+          {
+            "node": "Configure radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Every Monday 08:00": {
+      "main": [
+        [
+          {
+            "node": "Configure radar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configure radar": {
+      "main": [
+        [
+          {
+            "node": "Get current ads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get current ads": {
+      "main": [
+        [
+          {
+            "node": "Check new and stopped ads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check new and stopped ads": {
+      "main": [
+        [
+          {
+            "node": "Build radar report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build radar report": {
+      "main": [
+        [
+          {
+            "node": "Post radar to Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save radar page in Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}

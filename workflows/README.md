@@ -2,7 +2,15 @@
 
 Every Monday, get the Google ads that **became "winning" this week** (still running after 30+ days: advertisers keep ads that work) and the **ads launched in the last 7 days**, for 5 competitors, in Slack or Notion. Data: Google's official Ads Transparency Center, via the Apify Actor [xsi/google-ads-transparency](https://apify.com/xsi/google-ads-transparency).
 
-Cost: 5 competitors × 50 ads ≈ $0.25 per week ($1 per 1,000 ads). The Apify free plan gives $5 of credit every month. Websites with no ads cost nothing and are listed at the bottom of the report.
+Cost: 5 competitors × 50 ads ≈ $0.25 per week ($1 per 1,000 ads, ad copy included; +$0.001 per ad text read by OCR). The Apify free plan gives $5 of credit every month. Websites with no ads cost nothing and are listed at the bottom of the report.
+
+> Actor v2.1 (26 Nov 2026) adds one free `domain_summary` row per website. All workflows here ignore it in the "No ads" line (updated files of 26 Nov 2026). If you imported an older copy, re-import it or add `&& row.status !== 'domain_summary'` to the filter of the report Code node.
+
+## NEW — Radar: winning, new and stopped ads → Slack and Notion
+
+[`n8n-google-ads-radar-slack-notion.gallery.json`](n8n-google-ads-radar-slack-notion.gallery.json): one weekly digest with a summary line per competitor, winning ads, new launches, **new and stopped ads since last week** (monitor mode) and promo codes or discounts seen in the ads. Setup takes about 3 minutes: Apify HTTP Header Auth credential in both Apify nodes, Slack and Notion credentials, then edit **Configure radar**. Form fields for a creators.n8n.io submission: [`radar/GALLERY-FORM-FIELDS-RADAR.md`](radar/GALLERY-FORM-FIELDS-RADAR.md).
+
+Tested on n8n 2.49.7 on 26 Nov 2026 with real Apify runs (Slack and Notion nodes removed for the test): the first run stored a baseline, the second reported 1 stopped ad, the third did not repeat it. Reports: [`test-results/radar-run1-report.txt`](test-results/radar-run1-report.txt), [`radar-run2`](test-results/radar-run2-report.txt), [`radar-run3`](test-results/radar-run3-report.txt). Keep about 3 competitors per copy: Apify synchronous runs stop after 300 s.
 
 ## n8n template gallery file (recommended import)
 
@@ -53,7 +61,7 @@ No ads / not checked: nonexistent-shop-xyz-48213.com (no_ads_found)
 1. Connect Apify once: *Settings → Connections → Add connection → Apify*, paste your Apify token.
 2. In a table of companies with a website column: *Add enrichment* → **Run Apify Actor** → `xsi/google-ads-transparency`.
 3. Input Data: `{ "domain": /Website, "regions": ["US"], "maxAdsPerQuery": 10 }` (insert the column with `/`; the key stays quoted, the token does not).
-4. Test 5 rows (auto-update off), then click `status`, `headline`, `daysActive`, `isWinningAd`, `transparencyUrl` in a result cell to make columns. `status = "ok"` means the company runs Google ads, a lead signal for agencies. About $0.01 per company.
+4. Test 5 rows (auto-update off), then click `status`, `headline`, `daysActive`, `isWinningAd`, `transparencyUrl` in a result cell to make columns. `status = "ok"` means the company runs Google ads, a lead signal for agencies. About $0.01 per company. Since v2.1 the last row of each result is a free `domain_summary` row (active, winning and new ads, formats, oldest ad, promo codes): see [`CLAY-GUIDE.md`](CLAY-GUIDE.md) for the exact columns.
 
 ## Support
 

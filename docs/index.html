@@ -137,9 +137,9 @@ for ad in client.dataset(run[&quot;defaultDatasetId&quot;]).iterate_items():
 <li><code>new_ads_since</code> — ads first shown on or after a date, for a daily or weekly watch</li>
 </ul>
 <p>An agent can then be asked, for example: “What new ads has Nike run in the US and Germany since 1 November?” or “Compare adidas.com ad volume in the UK and France.”</p>
-<h2>Pricing (list prices)</h2>
+<h2>Pricing (list prices, 26 Nov 2026; the Apify Store page is the reference)</h2>
 <p>You only pay for results. Compute and proxy are included. No start fee.</p>
-<table><thead><tr><th>Event</th><th>Price</th></tr></thead><tbody><tr><td>Ad</td><td>$0.001</td></tr><tr><td>Ad with EU details (replaces the ad price)</td><td>$0.002</td></tr><tr><td>Ad copy, only when it is found</td><td>$0.001</td></tr><tr><td>MCP tool call</td><td>$0.005, plus the events above</td></tr></tbody></table>
+<table><thead><tr><th>Event</th><th>Price</th></tr></thead><tbody><tr><td>Ad (ad copy included)</td><td>$0.001 ($0.0007 on GOLD)</td></tr><tr><td>Ad with EU details (replaces the ad price)</td><td>$0.0015 ($0.001 on GOLD)</td></tr><tr><td>Ad copy read by OCR, only when text is found</td><td>$0.001</td></tr><tr><td>New-ad alert (monitor mode)</td><td>$0.005</td></tr><tr><td>MCP tool call</td><td>$0.003, plus the events above</td></tr></tbody></table>
 <p>A run never exceeds <em>Max ads per query</em>, <em>Max items</em>, or <em>Max cost per run</em>. Empty or failed results are not billed.</p>
 <h2>Disclaimer</h2>
 <p>This is public data from Google&#x27;s Ads Transparency Center. It is not access to anyone&#x27;s private ads account. Impression figures are official ranges published by Google under the EU DSA; they are usually available only after about 90 days, they are ranges rather than exact counts, and they are not published for non-EU countries. Always open the official <code>transparencyUrl</code> if you need to verify a record.</p>

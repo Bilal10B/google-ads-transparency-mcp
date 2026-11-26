@@ -143,10 +143,11 @@ On ne paie que les résultats. Le calcul et le proxy sont inclus. Pas de frais d
 
 | Événement | Prix |
 |---|---|
-| Pub | 0,001 $ |
-| Pub avec détails UE (remplace le prix « pub ») | 0,002 $ |
-| Texte de la pub, seulement s’il est trouvé | 0,001 $ |
-| Appel d’outil MCP | 0,005 $, plus les événements ci-dessus |
+| Pub (texte inclus) | 0,001 $ (0,0007 $ en GOLD) |
+| Pub avec détails UE (remplace le prix « pub ») | 0,0015 $ (0,001 $ en GOLD) |
+| Texte lu par OCR, seulement s’il est trouvé | 0,001 $ |
+| Alerte nouvelle pub (mode monitor) | 0,005 $ |
+| Appel d’outil MCP | 0,003 $, plus les événements ci-dessus |
 
 Un run ne dépasse jamais *Max ads per query*, *Max items* ou *Max cost per run*. Les résultats vides ou en échec ne sont pas facturés.
 

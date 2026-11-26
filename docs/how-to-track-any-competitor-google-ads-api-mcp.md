@@ -143,10 +143,13 @@ You only pay for results. Compute and proxy are included. No start fee.
 
 | Event | Price |
 |---|---|
-| Ad | $0.001 |
-| Ad with EU details (replaces the ad price) | $0.002 |
-| Ad copy, only when it is found | $0.001 |
-| MCP tool call | $0.005, plus the events above |
+| Ad (ad copy included) | $0.001 ($0.0007 on GOLD) |
+| Ad with EU details (replaces the ad price) | $0.0015 ($0.001 on GOLD) |
+| Ad copy read by OCR, only when text is found | $0.001 |
+| New-ad alert (monitor mode) | $0.005 |
+| MCP tool call | $0.003, plus the events above |
+
+*Prices updated on 26 Nov 2026 (v2.1). The Apify Store page is the reference.*
 
 A run never exceeds *Max ads per query*, *Max items*, or *Max cost per run*. Empty or failed results are not billed.
 

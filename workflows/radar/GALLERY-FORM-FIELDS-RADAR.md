@@ -35,7 +35,7 @@ Every Monday, this workflow checks your competitors' public Google ads and sends
 ======= END Setup =======
 
 ======= FIELD: Requirements =======
-An n8n instance (Cloud or self-hosted, built-in nodes only), an Apify account and API token, a Slack workspace and a Notion workspace. The Actor is pay-per-result on your Apify account: about $0.001 per ad on the free plan, $0.001 per ad text read by OCR, $0.001 per competitor checked by the monitor, $0.005 per new-ad alert (capped by maxNewAdAlerts). Stopped-ad alerts, summary rows and websites with no ads are free. Apify's free plan includes monthly credit.
+An n8n instance (Cloud or self-hosted, built-in nodes only), an Apify account and API token, a Slack workspace and a Notion workspace. The Actor is pay-per-result on your Apify account: about $0.001 per ad on the free plan, OCR off (no OCR charge), $0.001 per competitor checked by the monitor, $0.005 per new-ad alert (capped by maxNewAdAlerts). Stopped-ad alerts, summary rows and websites with no ads are free. Apify's free plan includes monthly credit.
 ======= END Requirements =======
 
 ======= FIELD: Customization =======

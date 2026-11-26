@@ -1,0 +1,180 @@
+{
+  "name": "Weekly competitor winning Google Ads → Notion database",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Setup (2 minutes)\n1. **Run Google Ads Transparency**: replace `YOUR_APIFY_TOKEN` (Apify Console → Settings → API & Integrations) and your 5 competitor websites / country in the JSON body.\n2. Notion: create an integration (notion.so/my-integrations), share your database with it, and set `YOUR_NOTION_TOKEN` and `YOUR_DATABASE_ID` in the last node. Database properties: **Name** (title), **Competitor** (text), **Type** (select), **Format** (select), **Days active** (number), **First shown** (date), **Link** (URL).\n3. Activate. Runs every Monday at 08:00.\n\nCost: about $0.25 per week for 5 competitors × 50 ads on the Apify free plan ($5 credit per month). Actor: https://apify.com/xsi/google-ads-transparency",
+        "height": 300,
+        "width": 420
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000002",
+      "name": "Every Monday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/xsi~google-ads-transparency/run-sync-get-dataset-items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_APIFY_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"domains\": [\"nike.com\", \"adidas.com\", \"puma.com\", \"newbalance.com\", \"asics.com\"], \"regions\": [\"US\"], \"maxAdsPerQuery\": 50}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000003",
+      "name": "Run Google Ads Transparency",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Weekly report: ads that became \"winning\" (running 30+ days and still live) in the last 7 days, and new launches.\nconst DAYS = 7;\nconst rows = $input.all().map(i => i.json);\nconst ok = rows.filter(r => r.status === 'ok');\nconst noAds = rows.filter(r => r.status && r.status !== 'ok');\nconst ageDays = d => (Date.now() - Date.parse(d + 'T00:00:00Z')) / 864e5;\nconst newWinners = ok.filter(r => r.isWinningAd && r.daysActive <= 30 + DAYS);\nconst launches = ok.filter(r => r.firstShownDate && ageDays(r.firstShownDate) <= DAYS);\nconst allWinners = ok.filter(r => r.isWinningAd);\nconst line = r => `• *${r.inputDomain}* · ${r.format}${r.headline ? ` · \"${r.headline}\"` : ''} · ${r.daysActive} days · <${r.transparencyUrl}|view>`;\nconst text = [\n  `*Competitor Google Ads — weekly report* (${ok.length} ads checked, ${allWinners.length} winning ads running 30+ days)`,\n  `*New winning ads this week* (crossed 30 days, still running): ${newWinners.length}`,\n  ...newWinners.slice(0, 15).map(line),\n  `*New ads launched in the last ${DAYS} days*: ${launches.length}`,\n  ...launches.slice(0, 15).map(line),\n  noAds.length ? `_No ads / not checked: ${noAds.map(r => `${r.inputDomain} (${r.status})`).join(', ')}_` : '',\n].filter(Boolean).join('\\n');\nconst tag = (r, type) => ({ ...r, reportType: type });\nreturn [{ json: { text, ads: [...newWinners.map(r => tag(r, 'New winner')), ...launches.map(r => tag(r, 'New launch'))] } }];\n"
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000004",
+      "name": "Keep new winning ads (30+ days) and launches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "ads",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000006",
+      "name": "One item per ad",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/pages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_NOTION_TOKEN"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ parent: { database_id: 'YOUR_DATABASE_ID' }, properties: { Name: { title: [{ text: { content: ($json.headline || $json.format + ' ad').slice(0, 200) } }] }, Competitor: { rich_text: [{ text: { content: $json.inputDomain } }] }, Type: { select: { name: $json.reportType } }, Format: { select: { name: $json.format } }, 'Days active': { number: $json.daysActive }, 'First shown': { date: { start: $json.firstShownDate } }, Link: { url: $json.transparencyUrl } } }) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000007",
+      "name": "Create Notion page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every Monday 08:00": {
+      "main": [
+        [
+          {
+            "node": "Run Google Ads Transparency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Google Ads Transparency": {
+      "main": [
+        [
+          {
+            "node": "Keep new winning ads (30+ days) and launches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep new winning ads (30+ days) and launches": {
+      "main": [
+        [
+          {
+            "node": "One item per ad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One item per ad": {
+      "main": [
+        [
+          {
+            "node": "Create Notion page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

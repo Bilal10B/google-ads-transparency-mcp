@@ -1,0 +1,142 @@
+{
+  "name": "Weekly competitor winning Google Ads → Slack",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Setup (2 minutes)\n1. **Run Google Ads Transparency**: replace `YOUR_APIFY_TOKEN` (Apify Console → Settings → API & Integrations) and your 5 competitor websites / country in the JSON body.\n2. Set the destination in the last node.\n3. Activate. Runs every Monday at 08:00.\n\nCost: about $0.25 per week for 5 competitors × 50 ads on the Apify free plan ($5 credit per month). Actor: https://apify.com/xsi/google-ads-transparency",
+        "height": 300,
+        "width": 420
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000001",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -340
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000002",
+      "name": "Every Monday 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/xsi~google-ads-transparency/run-sync-get-dataset-items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_APIFY_TOKEN"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"domains\": [\"nike.com\", \"adidas.com\", \"puma.com\", \"newbalance.com\", \"asics.com\"], \"regions\": [\"US\"], \"maxAdsPerQuery\": 50}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000003",
+      "name": "Run Google Ads Transparency",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Weekly report: ads that became \"winning\" (running 30+ days and still live) in the last 7 days, and new launches.\nconst DAYS = 7;\nconst rows = $input.all().map(i => i.json);\nconst ok = rows.filter(r => r.status === 'ok');\nconst noAds = rows.filter(r => r.status && r.status !== 'ok');\nconst ageDays = d => (Date.now() - Date.parse(d + 'T00:00:00Z')) / 864e5;\nconst newWinners = ok.filter(r => r.isWinningAd && r.daysActive <= 30 + DAYS);\nconst launches = ok.filter(r => r.firstShownDate && ageDays(r.firstShownDate) <= DAYS);\nconst allWinners = ok.filter(r => r.isWinningAd);\nconst line = r => `• *${r.inputDomain}* · ${r.format}${r.headline ? ` · \"${r.headline}\"` : ''} · ${r.daysActive} days · <${r.transparencyUrl}|view>`;\nconst text = [\n  `*Competitor Google Ads — weekly report* (${ok.length} ads checked, ${allWinners.length} winning ads running 30+ days)`,\n  `*New winning ads this week* (crossed 30 days, still running): ${newWinners.length}`,\n  ...newWinners.slice(0, 15).map(line),\n  `*New ads launched in the last ${DAYS} days*: ${launches.length}`,\n  ...launches.slice(0, 15).map(line),\n  noAds.length ? `_No ads / not checked: ${noAds.map(r => `${r.inputDomain} (${r.status})`).join(', ')}_` : '',\n].filter(Boolean).join('\\n');\nconst tag = (r, type) => ({ ...r, reportType: type });\nreturn [{ json: { text, ads: [...newWinners.map(r => tag(r, 'New winner')), ...launches.map(r => tag(r, 'New launch'))] } }];\n"
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000004",
+      "name": "Keep new winning ads (30+ days) and launches",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ text: $json.text }) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0000-4000-8000-000000000005",
+      "name": "Post to Slack (incoming webhook)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every Monday 08:00": {
+      "main": [
+        [
+          {
+            "node": "Run Google Ads Transparency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Google Ads Transparency": {
+      "main": [
+        [
+          {
+            "node": "Keep new winning ads (30+ days) and launches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep new winning ads (30+ days) and launches": {
+      "main": [
+        [
+          {
+            "node": "Post to Slack (incoming webhook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
